@@ -123,7 +123,7 @@ export class PaymentsService {
     }
 
     this.logger.log(
-      `Captured Sandbox order ${captured.orderId} capture=${captured.capture.id} status=${captured.capture.status}`,
+      `Capture recorded for Sandbox order ${captured.orderId} capture=${captured.capture.id} status=${captured.capture.status}`,
     );
     return this.toOrderView(captured);
   }
