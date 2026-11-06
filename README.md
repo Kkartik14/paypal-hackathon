@@ -258,7 +258,7 @@ pnpm test
 
 Covers the support-payment block, saved-recipient ALLOW, new-recipient HOLD, amount limits, submitted-detail mismatches, low-confidence HOLD, ticket signing, tampering, expiry, malformed input, startup guards for production secrets and live PayPal configuration, and the Groq pipeline (Whisper transcription, read-only tool round, strict extraction, and timeout/rate-limit errors) against mocked HTTP responses.
 
-The full ALLOW → create order → buyer approval → capture path was also exercised against a local fake Orders v2 service. Real PayPal Sandbox and live Groq calls require the credentials described above; they are not used by the credential-free demo path.
+The full ALLOW → create order → buyer approval → capture path was exercised against a local fake Orders v2 service. The API path was also validated live against Groq and PayPal Sandbox, including a completed `$18.00` Sandbox capture and an idempotent repeat capture. Real credentials are not used by the credential-free demo path.
 
 ## Demo audio
 
