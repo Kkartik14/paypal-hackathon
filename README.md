@@ -92,7 +92,7 @@ Then set `WEB_ORIGIN=http://localhost:3100` in `.env` and `NEXT_PUBLIC_API_BASE_
 pnpm dev          # build contracts, then run API + web in watch mode
 pnpm build        # production builds for contracts, API, web
 pnpm typecheck    # TypeScript across all packages
-pnpm test         # policy, ticket, config, and Groq provider tests (29 tests)
+pnpm test         # policy, ticket, config, and Groq provider tests (30 tests)
 pnpm audio        # regenerate demo clips (macOS say + ffmpeg)
 ```
 

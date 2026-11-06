@@ -271,6 +271,10 @@ export class GroqAnalysisProvider implements AnalysisProviderClient {
       "- `requestedRecipientName` is where the request asks the user to send money, not who is calling.",
       "- `amount` is the amount requested in the conversation, in USD, or null if it is not stated.",
       "- `pressureSignals` must contain only cues actually present. Quote the exact words; set `startSeconds` only when a timestamp is audible, otherwise null.",
+      "- Pressure means a demand to act immediately, a threat, a request for secrecy, an authority claim used to override the user's own checks, a request to redirect money to a new or unfamiliar destination, or an instruction to bypass a saved contact channel.",
+      "- Routine billing language is not pressure. A renewal notice, invoice, due date, “quick note,” “when you have a chance,” “whenever you're ready,” or “same as last month” must not be recorded as urgency.",
+      "- Identifying a billing or accounts department is not authority pressure. Only record authority when the caller uses a claimed role to push the user past their normal checks.",
+      "- If the request has no genuine pressure cue, return an empty `pressureSignals` array.",
       "- Use categories: urgency, secrecy, authority, payment_instruction, threat, inconsistency, other.",
       "- `missingFields` names anything needed for a payment review that the request does not provide.",
       "- `summary` is neutral and factual. Do not declare a scam verdict, do not claim voice authentication, and do not make an ALLOW/HOLD/BLOCK decision.",
@@ -282,7 +286,7 @@ export class GroqAnalysisProvider implements AnalysisProviderClient {
     const choice = await this.chat(
       {
         messages: [{ role: "user", content: prompt }],
-        temperature: 0.1,
+        temperature: 0,
         max_completion_tokens: 4096,
         reasoning_effort: "low",
         include_reasoning: false,
@@ -361,7 +365,14 @@ export class GroqAnalysisProvider implements AnalysisProviderClient {
                   : {}),
               };
             })
-            .filter((item) => item.quote && item.explanation)
+            // A quote must actually appear in the transcript. This keeps a
+            // hallucinated cue from causing a false HOLD.
+            .filter(
+              (item) =>
+                item.quote &&
+                item.explanation &&
+                comparableText(transcript).includes(comparableText(item.quote)),
+            )
         : [],
       missingFields: Array.isArray(raw.missingFields)
         ? raw.missingFields
@@ -745,6 +756,16 @@ function nullableString(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed.slice(0, 200) : null;
+}
+
+/** Loose comparison for checking that a quoted cue really appears in the transcript. */
+function comparableText(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[“”„]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 const NUMBER_WORDS: Record<string, number> = {

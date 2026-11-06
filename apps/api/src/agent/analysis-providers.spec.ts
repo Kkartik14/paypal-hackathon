@@ -192,6 +192,64 @@ describe("GroqAnalysisProvider", () => {
     );
   });
 
+  it("drops pressure quotes that do not appear in the transcript", async () => {
+    const transcript =
+      "This exact sentence is in the transcript. This is a routine renewal with no pressure.";
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({
+          choices: [
+            {
+              message: { role: "assistant", content: "No lookup needed." },
+              finish_reason: "stop",
+            },
+          ],
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          choices: [
+            {
+              message: {
+                role: "assistant",
+                content: JSON.stringify({
+                  ...EXTRACTION,
+                  pressureSignals: [
+                    {
+                      quote: "This exact sentence is in the transcript.",
+                      category: "urgency",
+                      explanation: "A real quote from the request.",
+                      startSeconds: null,
+                    },
+                    {
+                      quote: "This sentence was never spoken.",
+                      category: "threat",
+                      explanation: "A hallucinated quote.",
+                      startSeconds: null,
+                    },
+                  ],
+                }),
+              },
+              finish_reason: "stop",
+            },
+          ],
+        }),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await buildProvider().analyze({
+      payment: SAFE_PAYMENT,
+      profile: new ContactsService().getProfile(),
+      transcript,
+    });
+
+    expect(result.extraction.pressureSignals).toHaveLength(1);
+    expect(result.extraction.pressureSignals[0]?.quote).toBe(
+      "This exact sentence is in the transcript.",
+    );
+  });
+
   it("fails loudly when the Groq key is missing", async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
