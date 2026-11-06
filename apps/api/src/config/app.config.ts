@@ -12,8 +12,10 @@ export class AppConfig {
   readonly webOrigins: string[];
   readonly webOrigin: string;
   readonly aiProvider: AnalysisProvider;
-  readonly geminiApiKey: string | null;
-  readonly geminiModel: string;
+  readonly groqApiKey: string | null;
+  readonly groqModel: string;
+  readonly groqTranscriptionModel: string;
+  readonly groqApiBase: string;
   readonly paypalClientId: string | null;
   readonly paypalClientSecret: string | null;
   readonly paypalApiBase: string;
@@ -33,14 +35,21 @@ export class AppConfig {
     this.webOrigin = this.webOrigins[0] ?? "http://localhost:3000";
 
     const requestedProvider = (process.env.AI_PROVIDER ?? "").trim().toLowerCase();
-    if (requestedProvider && requestedProvider !== "gemini" && requestedProvider !== "mock") {
-      throw new Error("AI_PROVIDER must be either 'gemini' or 'mock'.");
+    if (requestedProvider && requestedProvider !== "groq" && requestedProvider !== "mock") {
+      throw new Error("AI_PROVIDER must be either 'groq' or 'mock'.");
     }
-    this.geminiApiKey = process.env.GEMINI_API_KEY?.trim() || null;
-    this.aiProvider = requestedProvider === "gemini" || (!requestedProvider && this.geminiApiKey)
-      ? "gemini"
+    this.groqApiKey = process.env.GROQ_API_KEY?.trim() || null;
+    this.aiProvider = requestedProvider === "groq" || (!requestedProvider && this.groqApiKey)
+      ? "groq"
       : "mock";
-    this.geminiModel = process.env.GEMINI_MODEL?.trim() || "gemini-2.5-flash";
+    this.groqModel = process.env.GROQ_MODEL?.trim() || "openai/gpt-oss-120b";
+    this.groqTranscriptionModel =
+      process.env.GROQ_TRANSCRIPTION_MODEL?.trim() || "whisper-large-v3-turbo";
+    this.groqApiBase = (process.env.GROQ_API_BASE ?? "https://api.groq.com/openai/v1").replace(
+      /\/+$/,
+      "",
+    );
+    this.assertGroqApiBase(this.groqApiBase);
 
     this.paypalClientId = process.env.PAYPAL_CLIENT_ID?.trim() || null;
     this.paypalClientSecret = process.env.PAYPAL_CLIENT_SECRET?.trim() || null;
@@ -76,8 +85,8 @@ export class AppConfig {
         "DECISION_TICKET_SECRET is not set. Using a development-only secret; configure one before deploying.",
       );
     }
-    if (this.aiProvider === "gemini" && !this.geminiApiKey) {
-      this.logger.warn("AI_PROVIDER=gemini but GEMINI_API_KEY is missing. Analysis requests will fail loudly.");
+    if (this.aiProvider === "groq" && !this.groqApiKey) {
+      this.logger.warn("AI_PROVIDER=groq but GROQ_API_KEY is missing. Analysis requests will fail loudly.");
     }
     if (!this.paypalClientId || !this.paypalClientSecret) {
       this.logger.warn("PayPal Sandbox credentials are not configured. Checkout endpoints will return 503.");
@@ -85,11 +94,26 @@ export class AppConfig {
   }
 
   get aiConfigured(): boolean {
-    return this.aiProvider === "mock" || Boolean(this.geminiApiKey);
+    return this.aiProvider === "mock" || Boolean(this.groqApiKey);
   }
 
   get paypalConfigured(): boolean {
     return Boolean(this.paypalClientId && this.paypalClientSecret);
+  }
+
+  private assertGroqApiBase(value: string): void {
+    let url: URL;
+    try {
+      url = new URL(value);
+    } catch {
+      throw new Error("GROQ_API_BASE must be a valid URL.");
+    }
+    const isLocal =
+      this.nodeEnv !== "production" &&
+      (url.hostname === "localhost" || url.hostname === "127.0.0.1");
+    if (url.protocol !== "https:" && !isLocal) {
+      throw new Error("GROQ_API_BASE must use HTTPS (localhost is allowed in development).");
+    }
   }
 
   private assertSandboxApiBase(value: string): void {

@@ -65,7 +65,7 @@ export function AnalysisResultView({
   const decision = analysis.decision;
   const copy = DECISION_COPY[decision];
   const providerLabel =
-    analysis.provider === "gemini" ? "Gemini audio analysis" : "Demo analysis engine";
+    analysis.provider === "groq" ? "Groq live analysis" : "Demo analysis engine";
   const identity = analysis.extraction.claimedIdentity;
   const organization = analysis.extraction.claimedOrganization;
   const destination =

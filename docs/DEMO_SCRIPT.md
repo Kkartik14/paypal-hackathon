@@ -14,7 +14,7 @@
 - [ ] Audio is checked with a 5-second test. Record at 1080p or higher.
 - [ ] Do not show real names, emails, credentials, or any live PayPal account.
 
-If Gemini is not configured, the demo still works with the labelled **demo analysis engine**. Say so if it appears; do not imply live audio understanding. If PayPal is not configured, checkout is unavailable by design — use a configured Sandbox for the recorded success path.
+If Groq is not configured, the demo still works with the labelled **demo analysis engine**. Say so if it appears; do not imply live audio understanding. If PayPal is not configured, checkout is unavailable by design — use a configured Sandbox for the recorded success path.
 
 ## 0:00–0:15 — The problem
 
@@ -92,7 +92,7 @@ If PayPal Sandbox is unavailable during recording:
 2. On the checkout panel, show the amber “sandbox checkout is not configured” notice (or the API's `503` message) and say: “Checkout is unavailable without server-side Sandbox credentials; analysis and policy still work. The repository includes the full create → approve → capture path.”
 3. Do not fake a receipt. A missing capture is better than a fabricated one.
 
-If Gemini is unavailable, use the demo engine and explicitly disclose it on camera. Do not claim live audio analysis when the demo engine is running.
+If Groq is unavailable, use the demo engine and explicitly disclose it on camera. Do not claim live audio analysis when the demo engine is running.
 
 ## Claims checklist
 

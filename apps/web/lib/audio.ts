@@ -8,7 +8,6 @@ const MIME_BY_EXTENSION: Record<string, string> = {
   webm: "audio/webm",
   ogg: "audio/ogg",
   flac: "audio/flac",
-  aac: "audio/aac",
 };
 
 export interface AudioPayload {

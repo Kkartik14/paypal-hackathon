@@ -25,9 +25,10 @@ Deploy both projects from the same repository. Enable **Include source files out
 Environment variables:
 
 ```bash
-AI_PROVIDER=gemini            # or mock for a credential-free demo
-GEMINI_API_KEY=...
-GEMINI_MODEL=gemini-2.5-flash
+AI_PROVIDER=groq              # or mock for a credential-free demo
+GROQ_API_KEY=...
+GROQ_MODEL=openai/gpt-oss-120b
+GROQ_TRANSCRIPTION_MODEL=whisper-large-v3-turbo
 
 PAYPAL_ENV=sandbox
 PAYPAL_CLIENT_ID=...          # Sandbox app credentials only
@@ -46,7 +47,7 @@ Notes:
 
 - `WEB_ORIGIN` must be the exact web origin, with no trailing slash. It also determines the PayPal return URL (`<origin>/checkout/return`). If you list multiple origins, the **first** is used for PayPal redirects.
 - Vercel serverless functions have a 4.5 MB request body limit. The API accepts 3 MB of audio, which becomes roughly 4 MB as base64. Use short clips or the transcript on Vercel.
-- Function `maxDuration` is set to 60 seconds. The Gemini analysis as a whole has a 50-second deadline, including all tool rounds, so the function keeps headroom for response handling.
+- Function `maxDuration` is set to 60 seconds. The Groq pipeline has a 50-second deadline across Whisper transcription, all tool rounds, and the extraction call, so the function keeps headroom for response handling.
 - Rate limiting is in-memory and per instance. It is a speed bump, not a quota. Put a real limiter in front of a public deployment.
 - The API is stateless. No database, disk, or webhook setup is required.
 - `PAYPAL_ENV` must remain `sandbox`. The API refuses to start on a live environment or live API host.
@@ -142,7 +143,9 @@ open http://localhost:3000
 | Checkout button missing | Decision is not `ALLOW`, amount is not exactly `$18.00`, or the recipient is not the demo merchant. |
 | PayPal returns to the wrong URL | `WEB_ORIGIN` first entry is wrong; redeploy the API. |
 | Browser calls `localhost:4000` in production | `NEXT_PUBLIC_API_BASE_URL` was missing at build time; rebuild the web project. |
-| `502 AI_PROVIDER_UNAVAILABLE` / `AI_NOT_CONFIGURED` | Gemini selected without a valid key or network access. No order was created. |
+| `502 AI_PROVIDER_UNAVAILABLE` / `AI_NOT_CONFIGURED` | Groq selected without a valid key, quota, or network access. No order was created. |
+| `503 AI_PROVIDER_BUSY` | Groq rate limit hit. Wait and retry; no order was created. |
+| `504 AI_TIMEOUT` | The 50-second Groq pipeline budget ran out. Use a shorter clip or paste the transcript. |
 | API exits with “DECISION_TICKET_SECRET … required in production” | `NODE_ENV=production` without a valid ticket secret. Generate one with `openssl rand -hex 32`. |
 | CORS error in the browser | `WEB_ORIGIN` does not exactly match the web origin (scheme, host, port). |
 | Vercel function cannot find `dist/serverless.js` | Build command did not run, or source outside the root directory is excluded. |

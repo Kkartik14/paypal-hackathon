@@ -8,7 +8,7 @@ export const DECISIONS = ["ALLOW", "HOLD", "BLOCK"] as const;
 export const DecisionSchema = z.enum(DECISIONS);
 export type Decision = z.infer<typeof DecisionSchema>;
 
-export const ANALYSIS_PROVIDERS = ["gemini", "mock"] as const;
+export const ANALYSIS_PROVIDERS = ["groq", "mock"] as const;
 export const AnalysisProviderSchema = z.enum(ANALYSIS_PROVIDERS);
 export type AnalysisProvider = z.infer<typeof AnalysisProviderSchema>;
 

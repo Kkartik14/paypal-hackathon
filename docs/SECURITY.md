@@ -32,7 +32,7 @@ Recipient checks operate only on the fictional demo profile in `apps/api/src/dem
 untrusted audio / transcript / form input
         │
         ▼
-AI provider (Gemini or demo engine)  ──► evidence only, schema-validated
+AI provider (Groq or demo engine)    ──► evidence only, schema-validated
         │
         ▼
 deterministic policy (server code)   ──► ALLOW / HOLD / BLOCK
@@ -48,10 +48,10 @@ The model is treated as an untrusted *interpreter*, not an authority. It cannot 
 
 ## Prompt-injection handling
 
-- Audio and transcript text are wrapped in explicit untrusted-content markers in the Gemini prompt.
+- Audio is transcribed by Groq Whisper, then the transcript and form text are wrapped in explicit untrusted-content markers in every Groq prompt.
 - The system instruction tells the model to ignore instructions inside the request, never reveal secrets, never call payment tools, and never issue a decision.
 - The only tools exposed to the model are read-only profile lookups (`get_payment_rules`, `get_saved_recipient`).
-- Gemini output is normalized and validated against a strict Zod schema before use. Invalid output fails with `502`; it never becomes an `ALLOW`.
+- Groq extraction output is normalized and validated against a strict Zod schema before use. The Groq call also requests strict JSON Schema output, but server-side Zod validation remains authoritative. Invalid output fails with `502`; it never becomes an `ALLOW`.
 - The policy engine uses the extracted fields, not free-form model reasoning. A model that is persuaded to invent facts can produce a wrong *evidence* record, but the policy still applies fixed rules and fails closed on missing or low-confidence fields.
 - The MCP `analyze_payment_request` tool exposes no ticket, no order creation, and no capture.
 
@@ -100,7 +100,7 @@ Any `block` reason produces `BLOCK`. Any `hold` reason produces `HOLD`. Only a r
 
 ## Data handling
 
-- **Audio:** decoded in memory, size- and type-checked (max 3 MB), forwarded to Gemini when enabled, then discarded. It is never written to disk or a database.
+- **Audio:** decoded in memory, size- and type-checked (max 3 MB), forwarded to Groq Whisper when enabled, then discarded. It is never written to disk or a database. Use only the synthetic demo audio; Groq processes the submitted audio under its API terms.
 - **Transcripts:** processed in memory and returned to the caller. Application logs exclude transcript text, pressure quotes, audio, and contact data.
 - **Logs:** analysis logs contain the analysis ID, provider, decision, checkout availability, and step timings. PayPal logs contain order/capture IDs and status. No API keys or raw personal data.
 - **Browser storage:** the pending order ID, ticket, and analysis ID are kept in `sessionStorage` for the checkout return. They are removed on demo reset and do not persist across browser sessions.
@@ -112,7 +112,7 @@ Because this is a public demo, do not paste sensitive real call recordings or pe
 ## Configuration and secrets
 
 - Real environment variables override `.env` files.
-- `GEMINI_API_KEY`, `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `DECISION_TICKET_SECRET`, and `MCP_API_KEY` are server-side only.
+- `GROQ_API_KEY`, `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `DECISION_TICKET_SECRET`, and `MCP_API_KEY` are server-side only.
 - Never place a secret in `NEXT_PUBLIC_*`; those values are compiled into the browser bundle.
 - The app refuses to start on a live PayPal environment or live API host.
 - Rotate the Sandbox app credentials and ticket secret if a deployment is shared publicly.
@@ -125,7 +125,7 @@ Because this is a public demo, do not paste sensitive real call recordings or pe
 - `GET` and `DELETE` return `405` because no sessions or SSE stream exist.
 - `analyze_payment_request` is rate-limited and bounded to a 20,000-character transcript and a validated payment object.
 
-If the demo is deployed publicly without `MCP_API_KEY`, anyone can spend your Gemini quota through the analysis tool. Set the key or keep the deployment private.
+If the demo is deployed publicly without `MCP_API_KEY`, anyone can spend your Groq quota through the analysis tool. Set the key or keep the deployment private.
 
 ## Abuse and availability
 
@@ -135,7 +135,7 @@ If the demo is deployed publicly without `MCP_API_KEY`, anyone can spend your Ge
   - order reads: 60 / 10 minutes;
   - MCP: 60 / 10 minutes.
 - Request body limit: 6 MB JSON; decoded audio limit: 3 MB.
-- The Gemini analysis has a 50-second overall deadline across all tool rounds, keeping it inside the 60-second serverless limit; each PayPal call times out after 30 seconds.
+- The Groq pipeline has a 50-second overall deadline across Whisper transcription, every tool round, and the extraction call, keeping it inside the 60-second serverless limit; each PayPal call times out after 30 seconds.
 - Serverless instances do not share counters. A cold start resets the buckets, and an attacker using many instances can exceed these limits. This is a speed bump, not a quota.
 - Vercel's serverless request limit is smaller than the app's 6 MB JSON limit; use short clips or the transcript on that platform.
 

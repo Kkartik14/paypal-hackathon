@@ -280,7 +280,7 @@ export default function HomePage() {
   }
 
   const providerLabel =
-    demo?.provider === "gemini" ? "Gemini live analysis" : "Demo analysis engine";
+    demo?.provider === "groq" ? "Groq live analysis" : "Demo analysis engine";
 
   return (
     <>
@@ -490,7 +490,7 @@ export default function HomePage() {
                     <p className="section-kicker">Payment request</p>
                     <h3>{selectedScenario ? selectedScenario.title : "Custom request"}</h3>
                   </div>
-                  <span className={`provider-pill ${demo?.provider === "gemini" ? "is-live" : ""}`}>
+                  <span className={`provider-pill ${demo?.provider === "groq" ? "is-live" : ""}`}>
                     <span className="provider-dot" />
                     {providerLabel}
                   </span>
@@ -513,8 +513,8 @@ export default function HomePage() {
                 {demo?.provider === "mock" && (
                   <div className="notice notice-soft">
                     <Spark width={14} height={14} />
-                    The demo engine reads the transcript. Add <code>GEMINI_API_KEY</code> and set{" "}
-                    <code>AI_PROVIDER=gemini</code> for live audio understanding.
+                    The demo engine reads the transcript. Add <code>GROQ_API_KEY</code> and set{" "}
+                    <code>AI_PROVIDER=groq</code> for live audio understanding.
                   </div>
                 )}
 
@@ -599,7 +599,7 @@ export default function HomePage() {
                   <label className={`upload-zone ${audioFile ? "has-file" : ""}`}>
                     <input
                       type="file"
-                      accept="audio/*,.m4a,.mp4,.mp3,.wav,.webm,.ogg,.flac,.aac"
+                      accept="audio/*,.m4a,.mp4,.mp3,.wav,.webm,.ogg,.flac"
                       onChange={onAudioChange}
                     />
                     <FileAudio width={18} height={18} />
@@ -683,8 +683,8 @@ export default function HomePage() {
                 </p>
                 <div className="analyzing-meta">
                   <span className="spinner" />
-                  {demo?.provider === "gemini"
-                    ? "Gemini audio analysis usually takes a few seconds."
+                  {demo?.provider === "groq"
+                    ? "Groq transcription and analysis usually take a few seconds."
                     : "The demo engine responds almost instantly."}
                 </div>
                 <div className="analyzing-note">
@@ -737,8 +737,8 @@ export default function HomePage() {
                 <span className="how-number">01</span>
                 <h3>Read the request</h3>
                 <p>
-                  Gemini transcribes the clip and extracts the claimed identity, payment
-                  destination, amount, purpose, and pressure cues as structured evidence.
+                  Groq transcribes the clip with Whisper and extracts the claimed identity,
+                  payment destination, amount, purpose, and pressure cues as structured evidence.
                 </p>
               </article>
               <article>

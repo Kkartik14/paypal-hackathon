@@ -27,7 +27,6 @@ const SUPPORTED_AUDIO_TYPES: Record<string, string> = {
   "audio/webm": "audio/webm",
   "audio/ogg": "audio/ogg",
   "audio/flac": "audio/flac",
-  "audio/aac": "audio/aac",
 };
 
 @Injectable()
@@ -242,7 +241,7 @@ function decodeAudio(
     throw new ApiException(
       415,
       "UNSUPPORTED_AUDIO_TYPE",
-      "Unsupported audio type. Use m4a/mp4, mp3, wav, webm, ogg, flac, or aac.",
+      "Unsupported audio type. Use m4a/mp4, mp3, wav, webm, ogg, or flac.",
     );
   }
 

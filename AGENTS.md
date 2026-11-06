@@ -10,7 +10,7 @@ Before implementing or changing the project, read:
 
 - Build ScamBrake as a voice-first consumer agent for social-engineering payment requests.
 - The differentiating demo is a fictional urgent call blocked by a user-specific payment rule, followed by a real PayPal Sandbox purchase to the demo merchant.
-- Use Next.js for the web app, NestJS for the API, Vercel for hosting, Gemini API for audio understanding/function calling, and PayPal Orders v2 Sandbox for checkout.
+- Use Next.js for the web app, NestJS for the API, Vercel for hosting, Groq (Whisper transcription plus GPT-OSS tool calling and structured extraction) for audio understanding, and PayPal Orders v2 Sandbox for checkout.
 - Render is explicitly excluded. Sponsor tools are optional; do not add one without a useful product role.
 - Ship REST endpoints and a small stateless MCP-over-HTTP interface over shared NestJS services. MCP must not expose capture.
 

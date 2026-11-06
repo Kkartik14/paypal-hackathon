@@ -29,7 +29,7 @@ The differentiating moment is the separation of jobs: the AI gathers and quotes 
 ┌──────────────────────────┐        REST / JSON        ┌───────────────────────────┐
 │  Next.js web (apps/web)  │ ────────────────────────▶ │  NestJS API (apps/api)    │
 │  review, evidence,       │                           │                           │
-│  checkout return         │                           │  Analysis  ─▶ Gemini or   │
+│  checkout return         │                           │  Analysis  ─▶ Groq or     │
 └──────────────────────────┘                           │              demo engine  │
                                                        │  Policy    ─▶ ALLOW/HOLD/ │
 ┌──────────────────────────┐        JSON-RPC           │              BLOCK        │
@@ -92,36 +92,38 @@ Then set `WEB_ORIGIN=http://localhost:3100` in `.env` and `NEXT_PUBLIC_API_BASE_
 pnpm dev          # build contracts, then run API + web in watch mode
 pnpm build        # production builds for contracts, API, web
 pnpm typecheck    # TypeScript across all packages
-pnpm test         # policy, ticket, and config tests (18 tests)
+pnpm test         # policy, ticket, config, and Groq provider tests (29 tests)
 pnpm audio        # regenerate demo clips (macOS say + ffmpeg)
 ```
 
-## Enable Gemini audio understanding
+## Enable Groq audio understanding
 
 By default the app runs the **demo analysis engine**, which reads the transcript and uses committed fixture extractions for the two sample scenarios. It is clearly labelled as a demo engine in the UI.
 
 For live audio analysis:
 
-1. Create a Gemini API key in Google AI Studio.
+1. Create a Groq API key at [console.groq.com/keys](https://console.groq.com/keys).
 2. In `.env`:
 
    ```bash
-   AI_PROVIDER=gemini
-   GEMINI_API_KEY=your_key_here
-   GEMINI_MODEL=gemini-2.5-flash
+   AI_PROVIDER=groq
+   GROQ_API_KEY=your_key_here
+   GROQ_MODEL=openai/gpt-oss-120b
+   GROQ_TRANSCRIPTION_MODEL=whisper-large-v3-turbo
    ```
 
-3. Restart `pnpm dev`. `GET /api/health` reports `aiProvider: "gemini"`.
+3. Restart `pnpm dev`. `GET /api/health` reports `aiProvider: "groq"`.
 
-What Gemini does:
+What Groq does:
 
-- Accepts inline audio (m4a/mp4, mp3, wav, webm, ogg, flac, aac — max 3 MB) and/or transcript text.
-- Runs a read-only tool phase (`get_payment_rules`, `get_saved_recipient`) and a structured JSON extraction phase.
-- Returns claimed identity, requested action, destination, amount, purpose, pressure quotes, missing fields, confidence, and a neutral summary.
+- Transcribes audio with Groq Whisper (`whisper-large-v3-turbo` by default). Supported formats: m4a/mp4, mp3, wav, webm, ogg, flac — max 3 MB.
+- Runs a read-only tool phase (`get_payment_rules`, `get_saved_recipient`) with `openai/gpt-oss-120b`.
+- Makes a separate, strict JSON-schema extraction call for claimed identity, requested action, destination, amount, purpose, pressure quotes, missing fields, confidence, and a neutral summary. Tools and structured output are separate calls because Groq does not support them together.
+- Treats the Whisper transcript as authoritative when audio is attached; a pasted transcript is used only when there is no audio.
 
-Failure behavior is deliberately loud: if `AI_PROVIDER=gemini` and the key is missing, analysis returns `503`. If Gemini errors, times out, or returns invalid JSON, analysis returns `502`. There is **no fallback to ALLOW**.
+Failure behavior is deliberately loud: if `AI_PROVIDER=groq` and the key is missing, analysis returns `503`. If Groq errors, times out, or returns invalid JSON, analysis returns `502`. There is **no fallback to ALLOW**.
 
-Raw audio is decoded in memory, sent to Gemini, and discarded. It is not written to disk or a database. Request logs exclude transcripts, audio, and contact data.
+Raw audio is decoded in memory, sent to Groq for transcription, and discarded. It is not written to disk or a database. Request logs exclude transcripts, audio, and contact data. Groq processes the submitted audio and transcript under its API terms; use the synthetic demo audio only.
 
 ## Enable PayPal Sandbox checkout
 
@@ -159,9 +161,11 @@ The API loads the root `.env`, then `apps/api/.env`, then real process environme
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `AI_PROVIDER` | `mock` (or `gemini` if a key exists) | Analysis engine selection. |
-| `GEMINI_API_KEY` | — | Server-side Gemini key. Never exposed to the browser. |
-| `GEMINI_MODEL` | `gemini-2.5-flash` | Gemini model ID. |
+| `AI_PROVIDER` | `mock` (or `groq` if a key exists) | Analysis engine selection. |
+| `GROQ_API_KEY` | — | Server-side Groq key. Never exposed to the browser. |
+| `GROQ_MODEL` | `openai/gpt-oss-120b` | Chat, tool-call, and extraction model. |
+| `GROQ_TRANSCRIPTION_MODEL` | `whisper-large-v3-turbo` | Speech-to-text model. |
+| `GROQ_API_BASE` | `https://api.groq.com/openai/v1` | Optional OpenAI-compatible Groq base URL; keep the default in production. |
 | `PAYPAL_ENV` | `sandbox` | Must remain `sandbox`; anything else aborts startup. |
 | `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET` | — | Sandbox app credentials. Missing values make checkout return `503`. |
 | `PAYPAL_PAYEE_EMAIL` | — | Optional expected Sandbox seller; verified before capture. |
@@ -203,7 +207,7 @@ curl -s http://localhost:4000/api/v1/analysis \
   }'
 ```
 
-Or send `audioBase64` + `audioMimeType` (base64 without a `data:` prefix) and omit the transcript when Gemini is configured.
+Or send `audioBase64` + `audioMimeType` (base64 without a `data:` prefix) and omit the transcript when Groq is configured. With audio attached, the server transcribes it before analysis.
 
 ## MCP over HTTP
 
@@ -252,7 +256,9 @@ Read [`docs/SECURITY.md`](docs/SECURITY.md) for the threat model, ticket design,
 pnpm test
 ```
 
-Covers the support-payment block, saved-recipient ALLOW, new-recipient HOLD, amount limits, submitted-detail mismatches, low-confidence HOLD, ticket signing, tampering, expiry, malformed input, and startup guards for production secrets and live PayPal configuration.
+Covers the support-payment block, saved-recipient ALLOW, new-recipient HOLD, amount limits, submitted-detail mismatches, low-confidence HOLD, ticket signing, tampering, expiry, malformed input, startup guards for production secrets and live PayPal configuration, and the Groq pipeline (Whisper transcription, read-only tool round, strict extraction, and timeout/rate-limit errors) against mocked HTTP responses.
+
+The full ALLOW → create order → buyer approval → capture path was also exercised against a local fake Orders v2 service. Real PayPal Sandbox and live Groq calls require the credentials described above; they are not used by the credential-free demo path.
 
 ## Demo audio
 
@@ -272,7 +278,7 @@ See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for environment variables, two-pr
 
 ## AI and tool disclosure
 
-- **Runtime AI:** Google Gemini 2.5 Flash, used for audio/transcript understanding and read-only tool calls. If no key is configured, a clearly labelled deterministic demo engine runs instead.
+- **Runtime AI:** Groq, using `whisper-large-v3-turbo` for speech-to-text and `openai/gpt-oss-120b` for read-only tool calls and strict structured extraction. If no key is configured, a clearly labelled deterministic demo engine runs instead.
 - **Decision-making:** no AI. The ALLOW/HOLD/BLOCK decision comes from deterministic server policy in `apps/api/src/policy/policy.service.ts`.
 - **Development:** this repository was built with an AI coding agent (OpenCode) as part of the hackathon workflow. Policy and ticket behavior are covered by automated tests.
 - **Voices:** the demo clips use macOS synthetic text-to-speech. No real caller or human voice recording is included.

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "A voice-first payment safety agent that reads a social-engineering request, checks it against saved rules, and stops suspicious PayPal payments before checkout.",
   applicationName: "ScamBrake",
-  keywords: ["payment safety", "scam prevention", "PayPal Sandbox", "voice agent", "Gemini"],
+  keywords: ["payment safety", "scam prevention", "PayPal Sandbox", "voice agent", "Groq"],
   robots: { index: false, follow: false },
 };
 

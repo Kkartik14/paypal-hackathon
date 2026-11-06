@@ -3,7 +3,7 @@ import { AppConfig } from "../config/app.config";
 import {
   AgentAnalysisInput,
   AgentAnalysisResult,
-  GeminiAnalysisProvider,
+  GroqAnalysisProvider,
   MockAnalysisProvider,
 } from "./analysis-providers";
 
@@ -11,12 +11,12 @@ import {
 export class AgentService {
   constructor(
     private readonly config: AppConfig,
-    private readonly gemini: GeminiAnalysisProvider,
+    private readonly groq: GroqAnalysisProvider,
     private readonly mock: MockAnalysisProvider,
   ) {}
 
   analyze(input: AgentAnalysisInput): Promise<AgentAnalysisResult> {
-    const provider = this.config.aiProvider === "gemini" ? this.gemini : this.mock;
+    const provider = this.config.aiProvider === "groq" ? this.groq : this.mock;
     return provider.analyze(input).then((result) => ({
       provider: provider.name,
       extraction: result.extraction,
