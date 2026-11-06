@@ -129,8 +129,8 @@ Raw audio is decoded in memory, sent to Groq for transcription, and discarded. I
 
 1. Sign in to the [PayPal Developer Dashboard](https://developer.paypal.com/dashboard/) and switch to **Sandbox**.
 2. Create a Sandbox app and copy its **Sandbox** client ID and secret.
-3. Create (or choose) a Sandbox **business** account to receive the demo payment. Optionally name it `Kettle & Co.` so the Sandbox receipt matches the fictional demo merchant.
-4. Create a Sandbox **personal** account to use as the buyer during the demo.
+3. Create (or choose) a Sandbox **business** account to receive the demo payment. Set `PAYPAL_PAYEE_EMAIL` to that account's **Sandbox** email, not a real PayPal address; an unregistered payee produces a `PENDING` / `UNILATERAL` capture. Optionally name it `Kettle & Co.` so the Sandbox receipt matches the fictional demo merchant.
+4. Create a Sandbox **personal** account to use as the buyer during the demo. For a USD charge to an India-based merchant, choose a **United States** buyer: PayPal Sandbox declines India-to-India USD payments with `INSTRUMENT_DECLINED`.
 5. Put the app credentials in `.env`:
 
    ```bash

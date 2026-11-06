@@ -129,7 +129,7 @@ open http://localhost:3000
 - [ ] Developer Dashboard is in **Sandbox** mode.
 - [ ] A Sandbox app exists; its client ID and secret are in the API environment (not the web project).
 - [ ] A Sandbox business account receives the payment. Optional: name it `Kettle & Co.` and set `PAYPAL_PAYEE_EMAIL` to its email.
-- [ ] A Sandbox personal account is available as the buyer.
+- [ ] A Sandbox personal account is available as the buyer. If the merchant is India-based and the charge is USD, use a US (or other non-India) buyer.
 - [ ] The API's `WEB_ORIGIN` matches the deployed web origin exactly.
 - [ ] No live credentials exist in any environment variable.
 - [ ] The receipt shows a real Sandbox capture ID and no real money moved.
@@ -140,6 +140,8 @@ open http://localhost:3000
 | --- | --- |
 | `503 PAYPAL_NOT_CONFIGURED` | Missing or empty `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET`. |
 | `502 PAYPAL_AUTH_FAILED` | Live credentials used, or Sandbox app disabled. |
+| `INSTRUMENT_DECLINED` on capture | The buyer's funding source failed. An India buyer cannot pay an India merchant in USD in Sandbox; use a US personal buyer or change the charge currency. The order stays `APPROVED` and no money moves. |
+| Capture status `PENDING` / `UNILATERAL` | The payee email is not a registered or confirmed Sandbox business account, or the merchant has not accepted the payment. Set `PAYPAL_PAYEE_EMAIL` to the Sandbox business account email and/or accept the payment in the merchant account. The UI shows pending, not paid. |
 | Checkout button missing | Decision is not `ALLOW`, amount is not exactly `$18.00`, or the recipient is not the demo merchant. |
 | PayPal returns to the wrong URL | `WEB_ORIGIN` first entry is wrong; redeploy the API. |
 | Browser calls `localhost:4000` in production | `NEXT_PUBLIC_API_BASE_URL` was missing at build time; rebuild the web project. |

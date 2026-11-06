@@ -169,7 +169,9 @@ function ReturnClient() {
   }
 
   const captured = order.capture;
-  const isCompleted = order.status === "COMPLETED" && captured;
+  const isCompleted = order.status === "COMPLETED" && captured?.status === "COMPLETED";
+  const pendingCapture =
+    order.status === "COMPLETED" && captured && captured.status !== "COMPLETED" ? captured : null;
 
   return (
     <ReturnShell>
@@ -258,6 +260,58 @@ function ReturnClient() {
                 Review another request
                 <ArrowRight width={16} height={16} className="arrow" />
               </Link>
+              <Link className="btn btn-ghost" href="/">
+                Home
+              </Link>
+            </div>
+          </>
+        ) : pendingCapture ? (
+          <>
+            <div className="return-intro">
+              <span className="return-state-icon is-amber">
+                <Clock width={26} height={26} />
+              </span>
+              <div>
+                <p className="section-kicker">Capture pending</p>
+                <h1>PayPal accepted the capture, but it is not complete yet.</h1>
+                <p>
+                  PayPal reports the capture as <code>{pendingCapture.status}</code>. ScamBrake
+                  will not label this as paid until PayPal reports <code>COMPLETED</code>. No real
+                  money moved.
+                </p>
+              </div>
+            </div>
+
+            <div className="approve-lines">
+              <div>
+                <span>Order ID</span>
+                <code>{order.orderId}</code>
+              </div>
+              <div>
+                <span>Capture ID</span>
+                <code>{pendingCapture.id}</code>
+              </div>
+              <div>
+                <span>Status</span>
+                <code>{pendingCapture.status}</code>
+              </div>
+              <div>
+                <span>Amount</span>
+                <span>
+                  {formatMoney(pendingCapture.amount)} {pendingCapture.currency}
+                </span>
+              </div>
+            </div>
+
+            <div className="return-actions">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => verifyOrder(order.orderId)}
+              >
+                <Refresh width={15} height={15} />
+                Check again
+              </button>
               <Link className="btn btn-ghost" href="/">
                 Home
               </Link>

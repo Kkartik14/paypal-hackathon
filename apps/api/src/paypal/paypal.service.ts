@@ -139,7 +139,7 @@ export class PaypalService {
 
   async captureOrder(orderId: string, idempotencyKey: string): Promise<PaypalOrderView> {
     this.assertConfigured();
-    const order = await this.request<PaypalOrderResponse>(
+    await this.request<PaypalOrderResponse>(
       `/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`,
       {
         method: "POST",
@@ -149,7 +149,11 @@ export class PaypalService {
         },
       },
     );
-    return this.toView(order);
+
+    // A capture response does not reliably include the purchase-unit amount,
+    // payee, or custom_id. Re-read the canonical order so the receipt is
+    // built from the same shape as every other order lookup.
+    return this.getOrder(orderId);
   }
 
   private toView(order: PaypalOrderResponse): PaypalOrderView {
