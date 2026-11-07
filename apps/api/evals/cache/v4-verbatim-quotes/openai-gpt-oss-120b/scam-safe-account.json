@@ -1,0 +1,54 @@
+{
+  "promptVersion": "v4-verbatim-quotes",
+  "promptHash": "f8d041cf21febef4f6f65125dde646b62aca469343cb19983071ef4a9360a7c8",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-safe-account",
+  "recordedAt": "2026-11-07T15:01:46.500Z",
+  "latencyMs": 2021,
+  "usage": {
+    "promptTokens": 1415,
+    "completionTokens": 650,
+    "totalTokens": 2065
+  },
+  "raw": {
+    "claimedIdentity": "Daniel Reed",
+    "claimedOrganization": "Meridian Bank",
+    "requestedAction": "transfer",
+    "requestedRecipientName": "our safe protection account",
+    "requestedRecipientIdentifier": null,
+    "amount": 900,
+    "currency": "USD",
+    "purpose": "Move funds to a protection account",
+    "pressureSignals": [
+      {
+        "quote": "This is Daniel Reed from Meridian Bank account security.",
+        "category": "authority",
+        "explanation": "Caller claims an official role to override user checks.",
+        "startSeconds": null
+      },
+      {
+        "quote": "move $900 to our safe protection account today",
+        "category": "payment_instruction",
+        "explanation": "Direct request to send money to a new destination.",
+        "startSeconds": null
+      },
+      {
+        "quote": "Keep this confidential and don't discuss it with anyone until the review is complete.",
+        "category": "secrecy",
+        "explanation": "Caller asks the user to keep the request secret.",
+        "startSeconds": null
+      },
+      {
+        "quote": "If you delay, the transfer will go through and we can't reverse it.",
+        "category": "threat",
+        "explanation": "Implied negative consequence if the user does not act quickly.",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [
+      "requestedRecipientIdentifier"
+    ],
+    "confidence": 0.98,
+    "summary": "The caller, claiming to be Daniel Reed from Meridian Bank account security, asks the user to move $900 to a safe protection account, urges secrecy, and threatens that the transfer will proceed and cannot be reversed if delayed."
+  }
+}

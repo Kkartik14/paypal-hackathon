@@ -1,0 +1,52 @@
+{
+  "promptVersion": "v1-baseline",
+  "promptHash": "51e67ba2650980d2f91221d4ab6e3d2f9b0131050e8ab8120e87aa3263790f11",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-vendor-bank-change",
+  "recordedAt": "2026-11-07T14:46:55.037Z",
+  "latencyMs": 1360,
+  "usage": {
+    "promptTokens": 914,
+    "completionTokens": 524,
+    "totalTokens": 1438
+  },
+  "raw": {
+    "claimedIdentity": "Priya",
+    "claimedOrganization": "Northwind Supplies",
+    "requestedAction": "send payment",
+    "requestedRecipientName": "Northwind Supplies LLC",
+    "requestedRecipientIdentifier": "ap@northwind-supplies.example",
+    "amount": 4800,
+    "currency": "USD",
+    "purpose": "Outstanding invoice",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "explanation": "The caller emphasizes that the request is time-sensitive because the shipment is on hold.",
+        "quote": "time-sensitive because the shipment is on hold",
+        "startSeconds": null
+      },
+      {
+        "category": "secrecy",
+        "explanation": "The caller asks the user to keep the change confidential.",
+        "quote": "Please keep this change confidential until it is confirmed",
+        "startSeconds": null
+      },
+      {
+        "category": "authority",
+        "explanation": "The caller claims to be from accounts payable, implying authority over payment matters.",
+        "quote": "Hi, this is Priya from Northwind Supplies accounts payable",
+        "startSeconds": null
+      },
+      {
+        "category": "payment_instruction",
+        "explanation": "The caller explicitly instructs to send the outstanding invoice amount to a new account.",
+        "quote": "please send the outstanding invoice of $4,800 to the new account today",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.95,
+    "summary": "The caller, identifying as Priya from Northwind Supplies accounts payable, requests a payment of $4,800 USD to Northwind Supplies LLC (ap@northwind-supplies.example) for an outstanding invoice, citing urgency, confidentiality, and authority."
+  }
+}

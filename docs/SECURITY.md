@@ -71,6 +71,20 @@ Implemented in `apps/api/src/policy/policy.service.ts`. It checks:
 
 Any `block` reason produces `BLOCK`. Any `hold` reason produces `HOLD`. Only a request with no block or hold reasons produces `ALLOW`. New or edited form fields cannot unlock a payment because the submitted details are re-compared with the extraction.
 
+## Prompt evaluation boundary
+
+Prompt changes are release-gated offline, not experimented on users:
+
+- The harness in `apps/api/src/evals` is a build-time CLI, not a deployed route. It is absent from the REST and MCP surfaces.
+- Replay mode reads committed raw model outputs and needs no credentials. It cannot call Groq or PayPal.
+- Live recording calls Groq with synthetic transcripts only, keeps the key server-side, and writes prompt-hash-bound JSON under `apps/api/evals/cache/`.
+- The evaluation scores the real normalization and the real `PolicyService`; there is no LLM judge and no score for prose.
+- A candidate prompt is rejected by any critical gate failure, any new false `ALLOW`, or a regression in a guarded quality metric such as extraction accuracy; a human reviews the diff before the default version changes.
+- There is no live A/B test on payment decisions. Users are never randomized into an unproven prompt, and no payment depends on a candidate version.
+- Cache entries do not contain audio, credentials, or personal data—only synthetic transcripts, model output, latency, and token counts.
+
+A passing evaluation is a regression gate for this small synthetic set. It is not a claim of real-world scam-detection accuracy, and it does not replace the deterministic policy, user confirmation, or the non-claims above. The process and limits are documented in [`EVALUATION.md`](EVALUATION.md).
+
 ## Decision tickets
 
 - HMAC-SHA-256 over a base64url JSON payload, signed with `DECISION_TICKET_SECRET`.

@@ -1,0 +1,34 @@
+{
+  "promptVersion": "v1-baseline",
+  "promptHash": "51e67ba2650980d2f91221d4ab6e3d2f9b0131050e8ab8120e87aa3263790f11",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "ambiguous-missing-amount",
+  "recordedAt": "2026-11-07T14:50:14.543Z",
+  "latencyMs": 856,
+  "usage": {
+    "promptTokens": 874,
+    "completionTokens": 286,
+    "totalTokens": 1160
+  },
+  "raw": {
+    "claimedIdentity": "Kettle and Co. billing",
+    "claimedOrganization": "Kettle and Co.",
+    "requestedAction": "approve the corrected charge",
+    "requestedRecipientName": "Kettle & Co.",
+    "requestedRecipientIdentifier": "billing@kettleandco.example",
+    "amount": 18,
+    "currency": "USD",
+    "purpose": "Subscription correction",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "explanation": "The caller indicates that the issue needs immediate approval.",
+        "quote": "we noticed an issue with your subscription payment and need you to approve the corrected charge",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.97,
+    "summary": "The caller claims to be billing from Kettle and Co., requesting the user approve a corrected subscription charge of $18.00 USD to the saved recipient Kettle & Co. (billing@kettleandco.example) for the purpose of subscription correction."
+  }
+}

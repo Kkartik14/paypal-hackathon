@@ -1,0 +1,27 @@
+{
+  "promptVersion": "v1-baseline",
+  "promptHash": "51e67ba2650980d2f91221d4ab6e3d2f9b0131050e8ab8120e87aa3263790f11",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "legit-quoted-scam-warning",
+  "recordedAt": "2026-11-07T14:49:24.850Z",
+  "latencyMs": 1167,
+  "usage": {
+    "promptTokens": 919,
+    "completionTokens": 333,
+    "totalTokens": 1252
+  },
+  "raw": {
+    "claimedIdentity": "Kettle and Co. billing",
+    "claimedOrganization": "Kettle and Co.",
+    "requestedAction": "payment",
+    "requestedRecipientName": "Kettle & Co.",
+    "requestedRecipientIdentifier": "billing@kettleandco.example",
+    "amount": 18,
+    "currency": "USD",
+    "purpose": "Monthly coffee subscription renewal",
+    "pressureSignals": [],
+    "missingFields": [],
+    "confidence": 1,
+    "summary": "The caller claims to be from Kettle and Co. billing and requests a payment of $18.00 USD to the saved recipient Kettle & Co. (billing@kettleandco.example) for a monthly coffee subscription renewal. No urgency, secrecy, authority, threat, or other pressure cues were detected."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "promptVersion": "v1-baseline",
+  "promptHash": "51e67ba2650980d2f91221d4ab6e3d2f9b0131050e8ab8120e87aa3263790f11",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-saved-merchant-impersonation",
+  "recordedAt": "2026-11-07T14:46:05.499Z",
+  "latencyMs": 1826,
+  "usage": {
+    "promptTokens": 912,
+    "completionTokens": 557,
+    "totalTokens": 1469
+  },
+  "raw": {
+    "amount": 18,
+    "currency": "USD",
+    "claimedIdentity": null,
+    "claimedOrganization": "Kettle and Co.",
+    "requestedAction": "payment",
+    "requestedRecipientName": "Kettle & Co.",
+    "requestedRecipientIdentifier": "billing@kettleandco.example",
+    "purpose": "Monthly coffee subscription renewal",
+    "confidence": 0.95,
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "explanation": "The caller urges immediate payment.",
+        "quote": "please send your $18.00 renewal to our new collection account today",
+        "startSeconds": null
+      },
+      {
+        "category": "secrecy",
+        "explanation": "The caller asks the user to keep the request confidential.",
+        "quote": "Keep this confidential until the migration is complete.",
+        "startSeconds": null
+      },
+      {
+        "category": "threat",
+        "explanation": "The caller threatens service suspension if payment is not made.",
+        "quote": "If you don't pay today, your subscription will be suspended.",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [
+      "new account details"
+    ],
+    "summary": "The caller claims to represent Kettle and Co. billing and requests a $18.00 USD payment to Kettle & Co. (billing@kettleandco.example) for a monthly coffee subscription renewal, urging immediate payment, requesting secrecy, and threatening suspension of service if not paid."
+  }
+}

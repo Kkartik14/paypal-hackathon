@@ -1,0 +1,29 @@
+{
+  "promptVersion": "v4-verbatim-quotes",
+  "promptHash": "f8d041cf21febef4f6f65125dde646b62aca469343cb19983071ef4a9360a7c8",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "ambiguous-missing-amount",
+  "recordedAt": "2026-11-07T15:06:20.529Z",
+  "latencyMs": 1035,
+  "usage": {
+    "promptTokens": 1364,
+    "completionTokens": 349,
+    "totalTokens": 1713
+  },
+  "raw": {
+    "claimedIdentity": null,
+    "claimedOrganization": "Kettle and Co.",
+    "requestedAction": "approve the corrected charge",
+    "requestedRecipientName": null,
+    "requestedRecipientIdentifier": null,
+    "amount": null,
+    "currency": "UNKNOWN",
+    "purpose": "Subscription correction",
+    "pressureSignals": [],
+    "missingFields": [
+      "amount"
+    ],
+    "confidence": 0.9,
+    "summary": "The caller identifies as Kettle and Co. billing and asks the user to approve a corrected subscription charge. No amount, recipient name, or identifier is stated in the conversation."
+  }
+}

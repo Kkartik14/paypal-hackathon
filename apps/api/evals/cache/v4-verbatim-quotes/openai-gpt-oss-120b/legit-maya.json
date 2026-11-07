@@ -1,0 +1,27 @@
+{
+  "promptVersion": "v4-verbatim-quotes",
+  "promptHash": "f8d041cf21febef4f6f65125dde646b62aca469343cb19983071ef4a9360a7c8",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "legit-maya",
+  "recordedAt": "2026-11-07T15:04:40.757Z",
+  "latencyMs": 1269,
+  "usage": {
+    "promptTokens": 1371,
+    "completionTokens": 290,
+    "totalTokens": 1661
+  },
+  "raw": {
+    "claimedIdentity": "Maya",
+    "claimedOrganization": null,
+    "requestedAction": "payment",
+    "requestedRecipientName": "Maya Chen",
+    "requestedRecipientIdentifier": "maya.chen@example.test",
+    "amount": 60,
+    "currency": "USD",
+    "purpose": "Group gift contribution",
+    "pressureSignals": [],
+    "missingFields": [],
+    "confidence": 0.99,
+    "summary": "The caller identifies as Maya and requests a $60 USD payment to Maya Chen (maya.chen@example.test) for a group gift contribution. No pressure cues are present in the request."
+  }
+}

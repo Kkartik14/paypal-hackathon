@@ -1,0 +1,27 @@
+{
+  "promptVersion": "v2-hardened",
+  "promptHash": "c5e9dd45647ce66ac5509b9e86c4e96172a0ee50046f62ce6f724de2a4bcd668",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "legit-kettle-urgent-wording",
+  "recordedAt": "2026-11-07T14:53:59.710Z",
+  "latencyMs": 1008,
+  "usage": {
+    "promptTokens": 1134,
+    "completionTokens": 247,
+    "totalTokens": 1381
+  },
+  "raw": {
+    "claimedIdentity": null,
+    "claimedOrganization": "Kettle and Co.",
+    "requestedAction": "payment",
+    "requestedRecipientName": "Kettle & Co.",
+    "requestedRecipientIdentifier": "billing@kettleandco.example",
+    "amount": 18,
+    "currency": "USD",
+    "purpose": "Monthly coffee subscription renewal",
+    "pressureSignals": [],
+    "missingFields": [],
+    "confidence": 0.99,
+    "summary": "The request asks to pay $18.00 USD to the saved merchant Kettle & Co. (billing@kettleandco.example) for a monthly coffee subscription renewal. No pressure cues are present."
+  }
+}

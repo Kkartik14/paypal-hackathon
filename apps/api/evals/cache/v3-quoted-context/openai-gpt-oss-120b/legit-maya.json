@@ -1,0 +1,27 @@
+{
+  "promptVersion": "v3-quoted-context",
+  "promptHash": "e0afff4cc8ee3f408c522e0a41f4961c7f2827efa33555d9618672d23f6b4c5c",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "legit-maya",
+  "recordedAt": "2026-11-07T14:58:34.718Z",
+  "latencyMs": 995,
+  "usage": {
+    "promptTokens": 1228,
+    "completionTokens": 232,
+    "totalTokens": 1460
+  },
+  "raw": {
+    "amount": 60,
+    "currency": "USD",
+    "claimedIdentity": "Maya",
+    "claimedOrganization": null,
+    "purpose": "Group gift contribution",
+    "requestedAction": "payment_instruction",
+    "requestedRecipientName": "Maya Chen",
+    "requestedRecipientIdentifier": "maya.chen@example.test",
+    "pressureSignals": [],
+    "missingFields": [],
+    "confidence": 0.99,
+    "summary": "The caller, Maya, requests a $60.00 USD payment to Maya Chen (maya.chen@example.test) for a group gift contribution."
+  }
+}

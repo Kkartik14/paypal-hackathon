@@ -1,0 +1,27 @@
+{
+  "promptVersion": "v4-verbatim-quotes",
+  "promptHash": "f8d041cf21febef4f6f65125dde646b62aca469343cb19983071ef4a9360a7c8",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "legit-quoted-scam-warning",
+  "recordedAt": "2026-11-07T15:05:30.623Z",
+  "latencyMs": 1132,
+  "usage": {
+    "promptTokens": 1409,
+    "completionTokens": 364,
+    "totalTokens": 1773
+  },
+  "raw": {
+    "claimedIdentity": "Kettle and Co. billing",
+    "claimedOrganization": "Kettle and Co.",
+    "requestedAction": "pay",
+    "requestedRecipientName": "Kettle & Co.",
+    "requestedRecipientIdentifier": "billing@kettleandco.example",
+    "amount": 18,
+    "currency": "USD",
+    "purpose": "Monthly coffee subscription renewal",
+    "pressureSignals": [],
+    "missingFields": [],
+    "confidence": 0.99,
+    "summary": "The caller identifies as Kettle and Co. billing, representing Kettle and Co., and requests a payment of $18.00 USD to the saved recipient Kettle & Co. (billing@kettleandco.example) for the monthly coffee subscription renewal. No pressure cues are present in the transcript."
+  }
+}

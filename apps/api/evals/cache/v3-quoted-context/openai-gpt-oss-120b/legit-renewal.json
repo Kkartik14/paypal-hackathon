@@ -1,0 +1,27 @@
+{
+  "promptVersion": "v3-quoted-context",
+  "promptHash": "e0afff4cc8ee3f408c522e0a41f4961c7f2827efa33555d9618672d23f6b4c5c",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "legit-renewal",
+  "recordedAt": "2026-11-07T14:58:09.741Z",
+  "latencyMs": 1021,
+  "usage": {
+    "promptTokens": 1255,
+    "completionTokens": 274,
+    "totalTokens": 1529
+  },
+  "raw": {
+    "claimedIdentity": "billing",
+    "claimedOrganization": "Kettle and Co.",
+    "requestedAction": "payment",
+    "requestedRecipientName": "Kettle & Co.",
+    "requestedRecipientIdentifier": "billing@kettleandco.example",
+    "amount": 18,
+    "currency": "USD",
+    "purpose": "Monthly coffee subscription renewal",
+    "pressureSignals": [],
+    "missingFields": [],
+    "confidence": 0.99,
+    "summary": "The caller identifies as billing from Kettle and Co., requesting a payment of $18.00 USD to the saved recipient Kettle & Co. (billing@kettleandco.example) for a monthly coffee subscription renewal."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "promptVersion": "v2-hardened",
+  "promptHash": "c5e9dd45647ce66ac5509b9e86c4e96172a0ee50046f62ce6f724de2a4bcd668",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "legit-maya",
+  "recordedAt": "2026-11-07T14:53:34.808Z",
+  "latencyMs": 1108,
+  "usage": {
+    "promptTokens": 1113,
+    "completionTokens": 292,
+    "totalTokens": 1405
+  },
+  "raw": {
+    "claimedIdentity": "Maya",
+    "claimedOrganization": null,
+    "requestedAction": "send money",
+    "requestedRecipientName": "Maya Chen",
+    "requestedRecipientIdentifier": "maya.chen@example.test",
+    "amount": 60,
+    "currency": "USD",
+    "purpose": "Group gift contribution",
+    "pressureSignals": [],
+    "missingFields": [],
+    "confidence": 0.9,
+    "summary": "The caller, Maya, asks Riya to send $60.00 USD to Maya Chen (maya.chen@example.test) as a contribution to a group gift for Sam's birthday. No urgency or other pressure cues are present."
+  }
+}

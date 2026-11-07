@@ -1,0 +1,60 @@
+{
+  "promptVersion": "v2-hardened",
+  "promptHash": "c5e9dd45647ce66ac5509b9e86c4e96172a0ee50046f62ce6f724de2a4bcd668",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-gift-card",
+  "recordedAt": "2026-11-07T14:51:30.667Z",
+  "latencyMs": 1976,
+  "usage": {
+    "promptTokens": 1130,
+    "completionTokens": 735,
+    "totalTokens": 1865
+  },
+  "raw": {
+    "claimedIdentity": "Officer Martinez",
+    "claimedOrganization": "Internal Revenue Service",
+    "requestedAction": "purchase gift cards",
+    "requestedRecipientName": "Federal Tax Resolution",
+    "requestedRecipientIdentifier": null,
+    "amount": 2400,
+    "currency": "USD",
+    "purpose": "Tax settlement",
+    "pressureSignals": [
+      {
+        "category": "authority",
+        "explanation": "Caller claims to be an officer from a government agency to compel action.",
+        "quote": "Officer Martinez from the Internal Revenue Service",
+        "startSeconds": null
+      },
+      {
+        "category": "threat",
+        "explanation": "Caller threatens legal consequences if payment is not made.",
+        "quote": "a warrant will be issued for your arrest today",
+        "startSeconds": null
+      },
+      {
+        "category": "urgency",
+        "explanation": "Caller indicates immediate action is required and labels it a final warning.",
+        "quote": "This is your final warning",
+        "startSeconds": null
+      },
+      {
+        "category": "secrecy",
+        "explanation": "Caller instructs the user not to inform anyone.",
+        "quote": "Do not tell your family or bank, and stay on the line until we finish",
+        "startSeconds": null
+      },
+      {
+        "category": "payment_instruction",
+        "explanation": "Caller directs the user to buy specific gift cards and provide the codes.",
+        "quote": "buy four $600 gift cards and read me the codes",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [
+      "requestedRecipientIdentifier"
+    ],
+    "confidence": 0.95,
+    "summary": "The caller claims to be Officer Martinez of the Internal Revenue Service, alleges an unpaid tax balance of $2,400 with a threat of arrest, demands the purchase of four $600 gift cards, instructs secrecy, and cites a final warning. The requested payment is $2,400 USD to Federal Tax Resolution for a tax settlement."
+  }
+}

@@ -13,6 +13,12 @@
     "dev": "pnpm --filter @scambrake/contracts build && concurrently -n api,web -c cyan,magenta \"pnpm --filter @scambrake/api dev\" \"pnpm --filter @scambrake/web dev\"",
     "typecheck": "pnpm --filter @scambrake/contracts typecheck && pnpm --filter @scambrake/api typecheck && pnpm --filter @scambrake/web typecheck",
     "test": "pnpm --filter @scambrake/api test",
+    "eval": "pnpm --filter @scambrake/api eval",
+    "eval:compare": "pnpm --filter @scambrake/api eval:compare",
+    "eval:live": "pnpm --filter @scambrake/api eval:live",
+    "eval:record": "pnpm --filter @scambrake/api eval:record",
+    "eval:check": "pnpm --filter @scambrake/api eval:check",
+    "eval:list": "pnpm --filter @scambrake/api eval:list",
     "audio": "node scripts/generate-audio.mjs",
     "reset": "rm -rf apps/web/.next apps/api/dist packages/contracts/dist"
   },

@@ -1,0 +1,58 @@
+{
+  "promptVersion": "v3-quoted-context",
+  "promptHash": "e0afff4cc8ee3f408c522e0a41f4961c7f2827efa33555d9618672d23f6b4c5c",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-safe-account",
+  "recordedAt": "2026-11-07T14:55:40.515Z",
+  "latencyMs": 1807,
+  "usage": {
+    "promptTokens": 1272,
+    "completionTokens": 720,
+    "totalTokens": 1992
+  },
+  "raw": {
+    "claimedIdentity": "Daniel Reed",
+    "claimedOrganization": "Meridian Bank",
+    "requestedAction": "transfer funds",
+    "requestedRecipientName": "Safe Account Protection",
+    "requestedRecipientIdentifier": "secure-payments@protection-review.example",
+    "amount": 900,
+    "currency": "USD",
+    "purpose": "Move funds to a protection account",
+    "pressureSignals": [
+      {
+        "category": "payment_instruction",
+        "quote": "move $900 to our safe protection account today",
+        "explanation": "Caller instructs the user to transfer money to a new account immediately.",
+        "startSeconds": null
+      },
+      {
+        "category": "authority",
+        "quote": "This is Daniel Reed from Meridian Bank account security",
+        "explanation": "Caller claims an official role to persuade the user.",
+        "startSeconds": null
+      },
+      {
+        "category": "secrecy",
+        "quote": "Keep this confidential and don't discuss it with anyone until the review is complete",
+        "explanation": "Caller asks the user to keep the request secret.",
+        "startSeconds": null
+      },
+      {
+        "category": "urgency",
+        "quote": "If you delay, the transfer will go through and we can't reverse it",
+        "explanation": "Caller creates a sense of immediate action needed to avoid loss.",
+        "startSeconds": null
+      },
+      {
+        "category": "payment_instruction",
+        "quote": "Use the account details I text you, not the number on your card",
+        "explanation": "Caller directs the user to use a different payment channel.",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.98,
+    "summary": "The caller, identifying as Daniel Reed from Meridian Bank account security, requests a $900 USD transfer to a safe protection account named Safe Account Protection, providing an email identifier and stating the purpose is to move funds to a protection account. The request includes urgency, secrecy, authority claims, and instructions to use alternative account details."
+  }
+}

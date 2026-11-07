@@ -1,0 +1,40 @@
+{
+  "promptVersion": "v4-verbatim-quotes",
+  "promptHash": "f8d041cf21febef4f6f65125dde646b62aca469343cb19983071ef4a9360a7c8",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-romance-emergency",
+  "recordedAt": "2026-11-07T15:03:50.958Z",
+  "latencyMs": 1473,
+  "usage": {
+    "promptTokens": 1405,
+    "completionTokens": 456,
+    "totalTokens": 1861
+  },
+  "raw": {
+    "claimedIdentity": "Alex",
+    "claimedOrganization": null,
+    "requestedAction": "send money",
+    "requestedRecipientName": "Daniel Okafor",
+    "requestedRecipientIdentifier": "daniel.okafor@example.test",
+    "amount": 350,
+    "currency": "USD",
+    "purpose": "Emergency travel",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "explanation": "Caller demands immediate payment for an emergency ticket.",
+        "quote": "I need $350 for an emergency ticket home. Please send it to my friend's account, Daniel Okafor, right now.",
+        "startSeconds": null
+      },
+      {
+        "category": "secrecy",
+        "explanation": "Caller asks the user not to tell anyone about their situation.",
+        "quote": "Don't tell anyone we're together yet, I'll explain when I land.",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.98,
+    "summary": "The caller, Alex, claims to be stuck at the airport with a stolen wallet and requests $350 USD to be sent immediately to Daniel Okafor (daniel.okafor@example.test) for an emergency ticket home, asking the user not to disclose their situation."
+  }
+}

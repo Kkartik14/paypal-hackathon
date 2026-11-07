@@ -1,0 +1,40 @@
+{
+  "promptVersion": "v1-baseline",
+  "promptHash": "51e67ba2650980d2f91221d4ab6e3d2f9b0131050e8ab8120e87aa3263790f11",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "ambiguous-saved-person-urgent",
+  "recordedAt": "2026-11-07T14:49:49.961Z",
+  "latencyMs": 1275,
+  "usage": {
+    "promptTokens": 877,
+    "completionTokens": 358,
+    "totalTokens": 1235
+  },
+  "raw": {
+    "claimedIdentity": "Maya",
+    "claimedOrganization": null,
+    "requestedAction": "send money",
+    "requestedRecipientName": "Maya Chen",
+    "requestedRecipientIdentifier": "maya.chen@example.test",
+    "amount": 70,
+    "currency": "USD",
+    "purpose": "Prescription reimbursement",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "explanation": "The caller emphasizes a need for immediate payment.",
+        "quote": "I need to cover her prescription. Can you send me $70 right away?",
+        "startSeconds": null
+      },
+      {
+        "category": "urgency",
+        "explanation": "The caller apologizes for short notice, indicating pressure.",
+        "quote": "Sorry for the short notice.",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.9,
+    "summary": "The caller, claiming to be Maya, asks to send $70 USD to Maya Chen (maya.chen@example.test) for a prescription reimbursement, citing urgency and short notice."
+  }
+}

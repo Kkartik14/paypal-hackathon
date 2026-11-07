@@ -1,0 +1,46 @@
+{
+  "promptVersion": "v3-quoted-context",
+  "promptHash": "e0afff4cc8ee3f408c522e0a41f4961c7f2827efa33555d9618672d23f6b4c5c",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-vendor-bank-change",
+  "recordedAt": "2026-11-07T14:56:55.466Z",
+  "latencyMs": 1752,
+  "usage": {
+    "promptTokens": 1261,
+    "completionTokens": 552,
+    "totalTokens": 1813
+  },
+  "raw": {
+    "claimedIdentity": "Priya",
+    "claimedOrganization": "Northwind Supplies",
+    "requestedAction": "send payment",
+    "requestedRecipientName": "Northwind Supplies LLC",
+    "requestedRecipientIdentifier": "ap@northwind-supplies.example",
+    "amount": 4800,
+    "currency": "USD",
+    "purpose": "Outstanding invoice",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "quote": "This is time-sensitive because the shipment is on hold.",
+        "explanation": "Caller emphasizes immediate action due to shipment hold.",
+        "startSeconds": null
+      },
+      {
+        "category": "secrecy",
+        "quote": "Please keep this change confidential until it is confirmed.",
+        "explanation": "Caller requests the user to keep the information secret.",
+        "startSeconds": null
+      },
+      {
+        "category": "payment_instruction",
+        "quote": "Use the new routing details in the attached email, not the old invoice.",
+        "explanation": "Caller directs the user to send money to a new, unspecified account.",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.95,
+    "summary": "Caller Priya from Northwind Supplies accounts payable requests a payment of $4,800 USD to Northwind Supplies LLC for an outstanding invoice, citing a time-sensitive shipment hold, asking for confidentiality, and instructing use of new routing details."
+  }
+}

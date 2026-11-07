@@ -1,0 +1,27 @@
+{
+  "promptVersion": "v4-verbatim-quotes",
+  "promptHash": "f8d041cf21febef4f6f65125dde646b62aca469343cb19983071ef4a9360a7c8",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "legit-renewal",
+  "recordedAt": "2026-11-07T15:04:15.773Z",
+  "latencyMs": 1286,
+  "usage": {
+    "promptTokens": 1398,
+    "completionTokens": 362,
+    "totalTokens": 1760
+  },
+  "raw": {
+    "claimedIdentity": "Kettle and Co. billing",
+    "claimedOrganization": "Kettle and Co.",
+    "requestedAction": "approve renewal",
+    "requestedRecipientName": "Kettle & Co.",
+    "requestedRecipientIdentifier": "billing@kettleandco.example",
+    "amount": 18,
+    "currency": "USD",
+    "purpose": "Monthly coffee subscription renewal",
+    "pressureSignals": [],
+    "missingFields": [],
+    "confidence": 0.99,
+    "summary": "The caller identifies as Kettle and Co. billing and requests approval of a $18.00 USD renewal for the monthly coffee subscription, directing payment to the saved recipient Kettle & Co. (billing@kettleandco.example). No pressure cues are present."
+  }
+}

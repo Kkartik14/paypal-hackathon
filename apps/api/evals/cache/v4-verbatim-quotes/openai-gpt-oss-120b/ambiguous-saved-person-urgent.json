@@ -1,0 +1,34 @@
+{
+  "promptVersion": "v4-verbatim-quotes",
+  "promptHash": "f8d041cf21febef4f6f65125dde646b62aca469343cb19983071ef4a9360a7c8",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "ambiguous-saved-person-urgent",
+  "recordedAt": "2026-11-07T15:05:56.114Z",
+  "latencyMs": 1621,
+  "usage": {
+    "promptTokens": 1367,
+    "completionTokens": 393,
+    "totalTokens": 1760
+  },
+  "raw": {
+    "claimedIdentity": "Maya",
+    "claimedOrganization": null,
+    "requestedAction": "payment",
+    "requestedRecipientName": "Maya Chen",
+    "requestedRecipientIdentifier": "maya.chen@example.test",
+    "amount": 70,
+    "currency": "USD",
+    "purpose": "Prescription reimbursement",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "explanation": "Caller requests immediate payment due to emergency.",
+        "quote": "Can you send me $70 right away?",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.9,
+    "summary": "The caller, identifying as Maya, asks to send $70 USD to Maya Chen (maya.chen@example.test) for prescription reimbursement, citing a short‑notice emergency."
+  }
+}

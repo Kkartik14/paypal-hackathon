@@ -7,6 +7,7 @@
 ## Before recording
 
 - [ ] `pnpm dev` is running, or the hosted demo is live.
+- [ ] `pnpm eval:check` passes locally, so the build uses the prompt that passed the offline gates.
 - [ ] `GET /api/health` shows the expected `aiProvider` and, for the full story, `paypalConfigured: true`.
 - [ ] A PayPal Sandbox **personal** buyer account is available. Sign out of PayPal before recording.
 - [ ] The browser is on `http://localhost:3000` in a fresh session (or press **Reset demo**).
@@ -94,6 +95,8 @@ If PayPal Sandbox is unavailable during recording:
 
 If Groq is unavailable, use the demo engine and explicitly disclose it on camera. Do not claim live audio analysis when the demo engine is running.
 
+If you mention the evaluation, say only what it is: an offline regression harness over 12 authored synthetic cases that scores extraction plus the real policy, with a hard gate against false `ALLOW`. It is not a benchmark of real-world scam detection.
+
 ## Claims checklist
 
 Use:
@@ -103,6 +106,7 @@ Use:
 - “PayPal Sandbox”
 - “saved recipient and saved limits”
 - “the model extracts evidence”
+- “prompts are versioned and gated offline” (only if you show the eval)
 
 Avoid:
 
@@ -111,3 +115,4 @@ Avoid:
 - “we know this is a scam”
 - “bank-grade” or “guaranteed safe”
 - “real payment” (it is Sandbox)
+- “benchmarked accuracy” or “trained on scam data” (the eval set is 12 synthetic authored cases)

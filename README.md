@@ -7,6 +7,7 @@ ScamBrake is a voice-first payment safety agent for social-engineering payment r
 Built for the PayPal AI Hackathon. Sandbox only — no live credentials and no real money.
 
 - [Security boundaries and known limits](docs/SECURITY.md)
+- [Prompt evaluation and release gates](docs/EVALUATION.md)
 - [Under-three-minute demo script](docs/DEMO_SCRIPT.md)
 - [Deployment notes](docs/DEPLOYMENT.md)
 
@@ -48,10 +49,12 @@ The differentiating moment is the separation of jobs: the AI gathers and quotes 
 ```
 apps/web                 Next.js 15 app (review desk, result, PayPal return)
 apps/api                 NestJS 11 API (analysis, policy, payments, MCP)
+apps/api/src/evals       Offline prompt evaluation: runner, scorecards, gates, CLI
+apps/api/evals           Labeled cases, committed replay cache, generated reports
 packages/contracts       Shared Zod schemas and TypeScript types
 fixtures/audio           Committed synthetic demo call clips + transcripts
 scripts/generate-audio.mjs  Regenerates the clips with macOS say + ffmpeg
-docs/                    Security, demo script, deployment
+docs/                    Security, evaluation, demo script, deployment
 ```
 
 ## Quick start (verified local path)
@@ -92,7 +95,9 @@ Then set `WEB_ORIGIN=http://localhost:3100` in `.env` and `NEXT_PUBLIC_API_BASE_
 pnpm dev          # build contracts, then run API + web in watch mode
 pnpm build        # production builds for contracts, API, web
 pnpm typecheck    # TypeScript across all packages
-pnpm test         # policy, ticket, config, Groq, and PayPal tests (31 tests)
+pnpm test         # policy, ticket, config, Groq, PayPal, and eval tests
+pnpm eval         # replay v2-hardened vs v4-verbatim-quotes (no API key needed)
+pnpm eval:check   # fail on a critical eval gate or a new false ALLOW
 pnpm audio        # regenerate demo clips (macOS say + ffmpeg)
 ```
 
@@ -154,6 +159,28 @@ Safety properties:
 - Capture is idempotent per order. A completed order displays the PayPal capture ID and status.
 
 > The PayPal Sandbox seller is the account that owns your API credentials. `Kettle & Co.` is a fictional demo merchant. Sandbox balances are not real money.
+
+## Prompt evaluation and release gates
+
+Prompts are versioned code. A prompt change ships only after a paired, offline evaluation against labeled cases and the **real** deterministic policy:
+
+```bash
+pnpm eval          # replay v2-hardened vs v4-verbatim-quotes from the committed cache
+pnpm eval:compare  # historical v1-baseline vs v2-hardened comparison
+pnpm eval:list     # validate and print the 12 labeled cases
+pnpm eval:record   # record fresh Groq outputs for all prompt versions (needs GROQ_API_KEY)
+pnpm eval:check    # exit non-zero on a critical gate or a new false ALLOW
+```
+
+- **12 cases:** 6 scam, 4 legitimate, 2 ambiguous, including two holdouts. Each records the expected decision, every acceptable decision, the ideal extraction, and the pressure evidence that should be found.
+- **Real scoring:** the harness runs `normalizeExtraction`, the shared Zod contracts, and `PolicyService`—the same code as production. There is no LLM judge and no prose score.
+- **Critical gates:** every extraction validates; no `ALLOW` on a request that should be held or blocked; no invented quote; safe decision rate ≥ 90%; no false `BLOCK` on a legitimate saved-recipient request; every scam case surfaces at least one genuine pressure cue; no false `ALLOW` on a holdout. Expected-category recall, legitimate pressure signals, and p95 latency are warnings.
+- **Recorded result:** `v4-verbatim-quotes` passed every critical gate with 12/12 safe outcomes, 0 false `ALLOW`, 0 hallucinated quotes, and 91.7% recipient accuracy. The eval rejected `v3-quoted-context` after it regressed to 2 false `ALLOW`s, and caught a missing-amount false `ALLOW` in `v2-hardened` that the earlier two-case smoke test missed.
+- **Paired comparison:** the candidate and baseline run on identical cases. Any critical failure or new false `ALLOW` rejects the candidate. A regression on a safe case or a holdout keeps the baseline. Promotion requires all gates, no new false `ALLOW`, no regression in a guarded quality metric (including extraction accuracy), and at least one improvement.
+- **Replay by default:** committed raw model outputs are prompt-hash-bound. Editing a released prompt without re-recording fails loudly instead of silently scoring stale output. `--live` records fresh Groq outputs with a 25-second throttle and never calls PayPal.
+- **No live A/B on money:** users are not randomized into a riskier prompt. A human reviews the scorecard and the prompt diff before the default version changes.
+
+The process, scorecard, gates, commands, current results, and limitations are in [`docs/EVALUATION.md`](docs/EVALUATION.md). Reports are written to `apps/api/evals/reports/`.
 
 ## Environment variables
 
@@ -256,7 +283,7 @@ Read [`docs/SECURITY.md`](docs/SECURITY.md) for the threat model, ticket design,
 pnpm test
 ```
 
-Covers the support-payment block, saved-recipient ALLOW, new-recipient HOLD, amount limits, submitted-detail mismatches, low-confidence HOLD, ticket signing, tampering, expiry, malformed input, startup guards for production secrets and live PayPal configuration, and the Groq pipeline (Whisper transcription, read-only tool round, strict extraction, and timeout/rate-limit errors) against mocked HTTP responses.
+Covers the support-payment block, saved-recipient ALLOW, new-recipient HOLD, amount limits, submitted-detail mismatches, low-confidence HOLD, ticket signing, tampering, expiry, malformed input, startup guards for production secrets and live PayPal configuration, the Groq pipeline (Whisper transcription, read-only tool round, strict extraction, and timeout/rate-limit errors) against mocked HTTP responses, and the prompt evaluation harness (case validation, prompt-hash-bound replay, scorecard aggregation, critical gates, and promote/reject recommendations).
 
 The full ALLOW → create order → buyer approval → capture path was exercised against a local fake Orders v2 service. The API path was also validated live against Groq and PayPal Sandbox, including a completed `$18.00` Sandbox capture and an idempotent repeat capture. Real credentials are not used by the credential-free demo path.
 
@@ -280,6 +307,7 @@ See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for environment variables, two-pr
 
 - **Runtime AI:** Groq, using `whisper-large-v3-turbo` for speech-to-text and `openai/gpt-oss-120b` for read-only tool calls and strict structured extraction. If no key is configured, a clearly labelled deterministic demo engine runs instead.
 - **Decision-making:** no AI. The ALLOW/HOLD/BLOCK decision comes from deterministic server policy in `apps/api/src/policy/policy.service.ts`.
+- **Prompt evaluation:** an offline harness with 12 authored synthetic cases and committed Groq outputs. It scores extraction plus the real policy; there is no LLM judge and no live A/B test on payment decisions.
 - **Development:** this repository was built with an AI coding agent (OpenCode) as part of the hackathon workflow. Policy and ticket behavior are covered by automated tests.
 - **Voices:** the demo clips use macOS synthetic text-to-speech. No real caller or human voice recording is included.
 - **Data:** all people, organizations, recipients, and merchants are fictional fixtures. PayPal is used in Sandbox mode only.

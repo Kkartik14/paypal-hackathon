@@ -124,6 +124,17 @@ curl http://localhost:4000/api/health
 open http://localhost:3000
 ```
 
+## Evaluation in CI
+
+The prompt evaluation is build-time only and does not deploy with the app. Run it before a deploy that changes a prompt, the extraction normalization, the policy, or the case set:
+
+```bash
+pnpm install
+pnpm eval:check        # replay only; no Groq or PayPal credentials
+```
+
+`pnpm eval:check` exits non-zero on a critical gate failure or a new false `ALLOW`. The replay cache is committed, so this works on a clean CI runner without secrets. Do not put `GROQ_API_KEY` in CI just to replay; live recording is a deliberate local step followed by a reviewed cache commit. See [`EVALUATION.md`](EVALUATION.md).
+
 ## PayPal Sandbox setup checklist
 
 - [ ] Developer Dashboard is in **Sandbox** mode.

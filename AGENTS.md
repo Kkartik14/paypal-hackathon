@@ -2,9 +2,10 @@
 
 Before implementing or changing the project, read:
 
-- `scambrake-plan/PLAN.md` for the agreed product, architecture, user flow, security boundaries, and deadline.
-- `scambrake-plan/RESEARCH.md` for source links, PayPal/Vercel constraints, and the current submission overlap scan.
-- `scambrake-plan/DEMO_SCRIPT.md` for the judge-facing story.
+- `local/scambrake-plan/PLAN.md` for the agreed product, architecture, user flow, security boundaries, and deadline.
+- `local/scambrake-plan/RESEARCH.md` for source links, PayPal/Vercel constraints, and the current submission overlap scan.
+- `local/scambrake-plan/DEMO_SCRIPT.md` for the judge-facing story.
+- `docs/EVALUATION.md` and `local/scambrake-plan/EVALUATION.md` for the prompt evaluation process and the current decision log.
 
 ## Product and stack decisions
 
@@ -22,6 +23,16 @@ Before implementing or changing the project, read:
 - Do not claim voice authentication, deepfake detection, external payee verification, or a universal scam verdict.
 - Only compare a requested recipient with the fictional, user-controlled records in the demo profile. Label these records as demo fixtures.
 - Keep API keys on the server and do not retain raw audio or personal contact data.
+
+## Prompt changes
+
+- Prompts are versioned code. Never edit a released prompt in place; add a new version under `apps/api/src/agent/prompts.ts`.
+- Any prompt change must pass `pnpm eval:check` against the committed cases and replay cache. Do not change `DEFAULT_PROMPT_VERSION` without a passing paired comparison and a human-reviewed scorecard.
+- Treat a new false `ALLOW`, a critical gate failure, a holdout regression, or a regression in a guarded quality metric (including amount/recipient extraction accuracy) as a hard reject. Do not trade a safety failure for a better average.
+- Add a synthetic regression case before changing a prompt in response to a live failure. Do not paste real recordings or personal data into the case set.
+- The eval is offline only. Do not add a live A/B test on payment decisions, an LLM judge, or a deployed eval endpoint.
+- Live recording (`pnpm eval:record`) calls Groq only, uses synthetic transcripts, respects the throttle, and never calls PayPal. Commit the resulting cache so replay stays credential-free.
+- Report eval results with their limits: 12 synthetic authored cases, extraction plus deterministic policy, not a real-world accuracy benchmark.
 
 ## Submission expectations
 

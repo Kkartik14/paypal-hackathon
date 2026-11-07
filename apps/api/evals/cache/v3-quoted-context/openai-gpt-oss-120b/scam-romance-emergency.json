@@ -1,0 +1,40 @@
+{
+  "promptVersion": "v3-quoted-context",
+  "promptHash": "e0afff4cc8ee3f408c522e0a41f4961c7f2827efa33555d9618672d23f6b4c5c",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-romance-emergency",
+  "recordedAt": "2026-11-07T14:57:45.117Z",
+  "latencyMs": 1399,
+  "usage": {
+    "promptTokens": 1262,
+    "completionTokens": 460,
+    "totalTokens": 1722
+  },
+  "raw": {
+    "claimedIdentity": "Alex",
+    "claimedOrganization": null,
+    "requestedAction": "send money",
+    "requestedRecipientName": "Daniel Okafor",
+    "requestedRecipientIdentifier": "daniel.okafor@example.test",
+    "amount": 350,
+    "currency": "USD",
+    "purpose": "Emergency travel",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "quote": "I need $350 for an emergency ticket home. ... right now.",
+        "explanation": "The caller demands immediate payment for an emergency ticket.",
+        "startSeconds": null
+      },
+      {
+        "category": "secrecy",
+        "quote": "Don't tell anyone we're together yet",
+        "explanation": "The caller asks the user to keep the request secret.",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.98,
+    "summary": "The caller, Alex, requests $350 USD to be sent immediately to Daniel Okafor (daniel.okafor@example.test) for an emergency travel purpose, and asks the user not to tell anyone."
+  }
+}

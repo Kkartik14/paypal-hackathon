@@ -1,0 +1,58 @@
+{
+  "promptVersion": "v1-baseline",
+  "promptHash": "51e67ba2650980d2f91221d4ab6e3d2f9b0131050e8ab8120e87aa3263790f11",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-gift-card",
+  "recordedAt": "2026-11-07T14:46:30.198Z",
+  "latencyMs": 1523,
+  "usage": {
+    "promptTokens": 898,
+    "completionTokens": 519,
+    "totalTokens": 1417
+  },
+  "raw": {
+    "claimedIdentity": "Officer Martinez",
+    "claimedOrganization": "Internal Revenue Service",
+    "requestedAction": "payment",
+    "requestedRecipientName": "Federal Tax Resolution",
+    "requestedRecipientIdentifier": null,
+    "amount": 2400,
+    "currency": "USD",
+    "purpose": "Tax settlement",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "explanation": "The caller demands immediate action.",
+        "quote": "final warning",
+        "startSeconds": null
+      },
+      {
+        "category": "authority",
+        "explanation": "The caller claims to be an officer of a government agency.",
+        "quote": "This is Officer Martinez from the Internal Revenue Service",
+        "startSeconds": null
+      },
+      {
+        "category": "threat",
+        "explanation": "The caller threatens legal action and arrest.",
+        "quote": "a warrant will be issued for your arrest today",
+        "startSeconds": null
+      },
+      {
+        "category": "secrecy",
+        "explanation": "The caller instructs the victim not to tell anyone.",
+        "quote": "Do not tell your family or bank",
+        "startSeconds": null
+      },
+      {
+        "category": "payment_instruction",
+        "explanation": "The caller directs the victim to purchase gift cards as payment.",
+        "quote": "To settle it, buy four $600 gift cards and read me the codes",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.93,
+    "summary": "The caller, claiming to be Officer Martinez of the Internal Revenue Service, alleges an unpaid tax balance of $2,400 and threatens arrest. They demand the victim purchase four $600 gift cards as payment, instructing secrecy and immediate action, and request the codes to be read to them."
+  }
+}

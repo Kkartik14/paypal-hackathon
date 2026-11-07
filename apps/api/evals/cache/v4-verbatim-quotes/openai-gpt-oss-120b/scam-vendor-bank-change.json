@@ -1,0 +1,46 @@
+{
+  "promptVersion": "v4-verbatim-quotes",
+  "promptHash": "f8d041cf21febef4f6f65125dde646b62aca469343cb19983071ef4a9360a7c8",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-vendor-bank-change",
+  "recordedAt": "2026-11-07T15:03:01.075Z",
+  "latencyMs": 1592,
+  "usage": {
+    "promptTokens": 1404,
+    "completionTokens": 512,
+    "totalTokens": 1916
+  },
+  "raw": {
+    "claimedIdentity": "Priya",
+    "claimedOrganization": "Northwind Supplies",
+    "requestedAction": "send payment",
+    "requestedRecipientName": "Northwind Supplies LLC",
+    "requestedRecipientIdentifier": "ap@northwind-supplies.example",
+    "amount": 4800,
+    "currency": "USD",
+    "purpose": "Outstanding invoice",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "quote": "This is time-sensitive because the shipment is on hold.",
+        "explanation": "The caller emphasizes immediate action due to a shipment hold.",
+        "startSeconds": null
+      },
+      {
+        "category": "secrecy",
+        "quote": "Please keep this change confidential until it is confirmed.",
+        "explanation": "The caller requests the user to keep the new banking details secret.",
+        "startSeconds": null
+      },
+      {
+        "category": "payment_instruction",
+        "quote": "please send the outstanding invoice of $4,800 to the new account today.",
+        "explanation": "The caller directs the user to pay a new account immediately.",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.9,
+    "summary": "The caller, Priya from Northwind Supplies, asks to send $4,800 USD for an outstanding invoice to a new account, citing time sensitivity due to a shipment hold and requesting confidentiality."
+  }
+}

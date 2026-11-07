@@ -8,7 +8,13 @@
     "dev": "nest start --watch",
     "start": "node dist/main.js",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "eval": "pnpm --filter @scambrake/contracts build && pnpm build && node dist/evals/cli.js compare --baseline v2-hardened --candidate v4-verbatim-quotes",
+    "eval:compare": "pnpm --filter @scambrake/contracts build && pnpm build && node dist/evals/cli.js compare --baseline v1-baseline --candidate v2-hardened",
+    "eval:live": "pnpm --filter @scambrake/contracts build && pnpm build && node dist/evals/cli.js compare --live --write-cache --baseline v2-hardened --candidate v4-verbatim-quotes",
+    "eval:record": "pnpm --filter @scambrake/contracts build && pnpm build && node dist/evals/cli.js run --live --write-cache --version v1-baseline --version v2-hardened --version v3-quoted-context --version v4-verbatim-quotes",
+    "eval:check": "pnpm --filter @scambrake/contracts build && pnpm build && node dist/evals/cli.js compare --baseline v2-hardened --candidate v4-verbatim-quotes --fail-on-gate --require-promotion",
+    "eval:list": "pnpm --filter @scambrake/contracts build && pnpm build && node dist/evals/cli.js list"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",

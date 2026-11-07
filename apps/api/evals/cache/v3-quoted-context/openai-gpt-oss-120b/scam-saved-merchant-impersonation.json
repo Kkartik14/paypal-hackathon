@@ -1,0 +1,52 @@
+{
+  "promptVersion": "v3-quoted-context",
+  "promptHash": "e0afff4cc8ee3f408c522e0a41f4961c7f2827efa33555d9618672d23f6b4c5c",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "scam-saved-merchant-impersonation",
+  "recordedAt": "2026-11-07T14:56:05.741Z",
+  "latencyMs": 2030,
+  "usage": {
+    "promptTokens": 1259,
+    "completionTokens": 727,
+    "totalTokens": 1986
+  },
+  "raw": {
+    "claimedIdentity": "Kettle and Co. billing",
+    "claimedOrganization": "Kettle and Co.",
+    "requestedAction": "payment",
+    "requestedRecipientName": "Kettle & Co.",
+    "requestedRecipientIdentifier": "billing@kettleandco.example",
+    "amount": 18,
+    "currency": "USD",
+    "purpose": "Monthly coffee subscription renewal",
+    "pressureSignals": [
+      {
+        "quote": "please send your $18.00 renewal to our new collection account today.",
+        "category": "urgency",
+        "explanation": "Caller demands immediate payment.",
+        "startSeconds": null
+      },
+      {
+        "quote": "Keep this confidential until the migration is complete.",
+        "category": "secrecy",
+        "explanation": "Caller asks to keep the payment details secret.",
+        "startSeconds": null
+      },
+      {
+        "quote": "Use the new account details I texted you, not the saved payment method.",
+        "category": "payment_instruction",
+        "explanation": "Caller instructs to use a new, unverified account instead of the saved one.",
+        "startSeconds": null
+      },
+      {
+        "quote": "If you don't pay today, your subscription will be suspended.",
+        "category": "threat",
+        "explanation": "Caller threatens service suspension if payment is not made immediately.",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.98,
+    "summary": "The caller claims to be from Kettle and Co. billing and requests a $18.00 USD payment for a monthly coffee subscription renewal, directing the user to a new collection account, asking for confidentiality, and warning of suspension if not paid today."
+  }
+}

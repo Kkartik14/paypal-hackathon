@@ -1,0 +1,34 @@
+{
+  "promptVersion": "v1-baseline",
+  "promptHash": "51e67ba2650980d2f91221d4ab6e3d2f9b0131050e8ab8120e87aa3263790f11",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "legit-kettle-urgent-wording",
+  "recordedAt": "2026-11-07T14:48:59.886Z",
+  "latencyMs": 1204,
+  "usage": {
+    "promptTokens": 902,
+    "completionTokens": 366,
+    "totalTokens": 1268
+  },
+  "raw": {
+    "claimedIdentity": null,
+    "claimedOrganization": "Kettle and Co.",
+    "requestedAction": "payment",
+    "requestedRecipientName": "Kettle & Co.",
+    "requestedRecipientIdentifier": "billing@kettleandco.example",
+    "amount": 18,
+    "currency": "USD",
+    "purpose": "Monthly coffee subscription renewal",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "explanation": "The caller indicates the payment is due immediately.",
+        "quote": "payment of $18.00 is due today",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.9,
+    "summary": "The caller, representing Kettle and Co., requests a $18.00 USD payment to the saved recipient Kettle & Co. (billing@kettleandco.example) for a monthly coffee subscription renewal, stating the payment is due today."
+  }
+}

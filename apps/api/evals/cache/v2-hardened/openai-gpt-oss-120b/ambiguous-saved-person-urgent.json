@@ -1,0 +1,34 @@
+{
+  "promptVersion": "v2-hardened",
+  "promptHash": "c5e9dd45647ce66ac5509b9e86c4e96172a0ee50046f62ce6f724de2a4bcd668",
+  "model": "openai/gpt-oss-120b",
+  "caseId": "ambiguous-saved-person-urgent",
+  "recordedAt": "2026-11-07T14:54:50.208Z",
+  "latencyMs": 1503,
+  "usage": {
+    "promptTokens": 1109,
+    "completionTokens": 325,
+    "totalTokens": 1434
+  },
+  "raw": {
+    "amount": 70,
+    "currency": "USD",
+    "claimedIdentity": "Maya",
+    "claimedOrganization": null,
+    "requestedAction": "payment",
+    "requestedRecipientName": "Maya Chen",
+    "requestedRecipientIdentifier": "maya.chen@example.test",
+    "purpose": "Prescription reimbursement",
+    "pressureSignals": [
+      {
+        "category": "urgency",
+        "explanation": "The caller asks for immediate payment.",
+        "quote": "send me $70 right away",
+        "startSeconds": null
+      }
+    ],
+    "missingFields": [],
+    "confidence": 0.9,
+    "summary": "The caller, claiming to be Maya, requests a $70 USD payment to Maya Chen (maya.chen@example.test) for prescription reimbursement, expressing urgency to send the money right away."
+  }
+}
