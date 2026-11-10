@@ -2,8 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "pnpm --filter @scambrake/contracts build && pnpm --filter @scambrake/api build",
   "functions": {
-    "api/index.cjs": {
-      "includeFiles": ["dist/**"],
+    "api/index.js": {
+      "includeFiles": "dist/**",
       "maxDuration": 60
     }
   },

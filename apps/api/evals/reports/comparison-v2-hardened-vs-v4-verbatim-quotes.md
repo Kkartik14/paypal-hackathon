@@ -1,6 +1,6 @@
 # ScamBrake prompt evaluation
 
-Generated: 2026-11-07T15:13:15.889Z
+Generated: 2026-11-10T22:12:22.389Z
 
 Model: `openai/gpt-oss-120b`
 

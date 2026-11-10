@@ -11,6 +11,8 @@ Built for the PayPal AI Hackathon. Sandbox only — no live credentials and no r
 - [Under-three-minute demo script](docs/DEMO_SCRIPT.md)
 - [Deployment notes](docs/DEPLOYMENT.md)
 
+**Hosted demo:** [scambrake-web-kappa.vercel.app](https://scambrake-web-kappa.vercel.app) · [API health](https://scambrake-api.vercel.app/api/health). The hosted build uses the same Sandbox-only API, Groq analysis, and deterministic policy as the local run. No real money can move.
+
 > **Demo video:** record a sub-three-minute walkthrough with the running app and add the public YouTube URL here before submission. The script and shot list are in [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md).
 
 ---
@@ -299,7 +301,7 @@ Every person, bank, merchant, and payment record in the demo is fictional.
 
 ## Deployment
 
-The web app is Vercel-ready. The API includes a Vercel serverless entry (`apps/api/api/index.cjs`) and `apps/api/vercel.json`, or can run on any Node 20+ host.
+The web app is Vercel-ready. The API includes a Vercel serverless entry (`apps/api/api/index.js`) and `apps/api/vercel.json`, or can run on any Node 20+ host.
 
 See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for environment variables, two-project setup, sandbox constraints, and the verified local fallback.
 

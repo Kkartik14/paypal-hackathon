@@ -8,7 +8,8 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "noUncheckedIndexedAccess": false,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "lib": ["ES2022", "DOM"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts"]

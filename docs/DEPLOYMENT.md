@@ -7,6 +7,15 @@ ScamBrake is two deployable pieces:
 
 The verified submission path is the reproducible local run in the README. The Vercel path below is included for a hosted demo; it is deliberately Sandbox-only.
 
+## Hosted demo
+
+| Piece | URL |
+| --- | --- |
+| Web app | https://scambrake-web-kappa.vercel.app |
+| API health | https://scambrake-api.vercel.app/api/health |
+
+The API project's `WEB_ORIGIN` is set to the web origin above, and the web project's `NEXT_PUBLIC_API_BASE_URL` is set to `https://scambrake-api.vercel.app/api`. The hosted API has a live Groq key and PayPal Sandbox credentials, so the support-call analysis and the `$18.00` Sandbox order both work. No live PayPal credentials exist in the deployment.
+
 ## Vercel: two projects
 
 Deploy both projects from the same repository. Enable **Include source files outside of the Root Directory in the Build Step** for each project, because both depend on the workspace package `packages/contracts`.
@@ -16,11 +25,16 @@ Deploy both projects from the same repository. Enable **Include source files out
 | Setting | Value |
 | --- | --- |
 | Root Directory | `apps/api` |
-| Framework Preset | Other |
+| Framework Preset | NestJS (or Other) |
 | Build Command | from `apps/api/vercel.json` |
-| Node.js Version | 20.x or 22.x |
+| Node.js Version | 20.x or newer |
 
-`apps/api/vercel.json` builds the contracts package and the API, then routes all requests to the compiled serverless entry `apps/api/api/index.cjs`, which reuses a Nest/Express instance across warm invocations. The compiled entry is required because Nest's dependency injection needs the decorator metadata emitted by `tsc`.
+`apps/api/vercel.json` builds the contracts package and the API, then routes all requests to the compiled serverless entry `apps/api/api/index.js`, which reuses a Nest/Express instance across warm invocations. The compiled entry is required because Nest's dependency injection needs the decorator metadata emitted by `tsc`.
+
+Two Vercel-specific details are intentional:
+
+- The entry file must be `api/index.js`. Vercel's function matcher rejected `api/index.cjs` even though the package is CommonJS.
+- `apps/api/tsconfig.json` includes `DOM` in `lib`. Vercel's build environment can expose a global `onmessage`, which makes `@types/node`'s conditional Fetch declarations resolve to an empty `Response`. The DOM lib supplies the standard `Response` shape (`ok`, `status`, `text`, `json`) without changing runtime code. `lib` is compile-time only; the API still runs on Node and never uses a browser.
 
 Environment variables:
 
@@ -161,6 +175,8 @@ pnpm eval:check        # replay only; no Groq or PayPal credentials
 | `504 AI_TIMEOUT` | The 50-second Groq pipeline budget ran out. Use a shorter clip or paste the transcript. |
 | API exits with “DECISION_TICKET_SECRET … required in production” | `NODE_ENV=production` without a valid ticket secret. Generate one with `openssl rand -hex 32`. |
 | CORS error in the browser | `WEB_ORIGIN` does not exactly match the web origin (scheme, host, port). |
+| `Property 'ok' does not exist on type 'Response'` during a Vercel build | Vercel's build declares a global `onmessage`, so `@types/node`'s conditional Fetch types collapse to an empty `Response`. Keep `"lib": ["ES2022", "DOM"]` in `apps/api/tsconfig.json`. |
+| `The pattern "api/index.cjs" ... doesn't match any Serverless Functions` | Rename the entry to `api/index.js` and update the `functions` key in `apps/api/vercel.json`. Vercel only recognizes `.js`, `.mjs`, `.ts`, and similar function extensions, not `.cjs`. |
 | Vercel function cannot find `dist/serverless.js` | Build command did not run, or source outside the root directory is excluded. |
 
 Never switch to live PayPal credentials to “make the demo work.” A missing Sandbox checkout is acceptable; a live payment is not.
