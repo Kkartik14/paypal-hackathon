@@ -2,7 +2,7 @@
 
 **Target runtime:** 2 minutes 20 seconds (hard limit: 3 minutes)
 **Format:** screen recording with voice-over
-**Environment:** local app or hosted demo, PayPal **Sandbox**, fictional fixtures only
+**Environment:** local app or hosted demo (https://scambrake-web-kappa.vercel.app), PayPal **Sandbox**, fictional fixtures only
 
 ## Before recording
 
@@ -10,7 +10,7 @@
 - [ ] `pnpm eval:check` passes locally, so the build uses the prompt that passed the offline gates.
 - [ ] `GET /api/health` shows the expected `aiProvider` and, for the full story, `paypalConfigured: true`.
 - [ ] A PayPal Sandbox **personal** buyer account is available. Sign out of PayPal before recording.
-- [ ] The browser is on `http://localhost:3000` in a fresh session (or press **Reset demo**).
+- [ ] The browser is on `http://localhost:3000` or https://scambrake-web-kappa.vercel.app in a fresh session (or press **Reset demo**).
 - [ ] Browser zoom is 110%, bookmarks/extension bars are hidden, and no `.env`, terminal secrets, or personal tabs are visible.
 - [ ] Audio is checked with a 5-second test. Record at 1080p or higher.
 - [ ] Do not show real names, emails, credentials, or any live PayPal account.

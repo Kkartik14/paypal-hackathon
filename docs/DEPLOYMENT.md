@@ -5,7 +5,7 @@ ScamBrake is two deployable pieces:
 - **web** — Next.js 15 (`apps/web`)
 - **api** — NestJS 11 (`apps/api`) with REST and MCP
 
-The verified submission path is the reproducible local run in the README. The Vercel path below is included for a hosted demo; it is deliberately Sandbox-only.
+The reproducible local run in the README and the hosted demo below are both verified. The deployment is deliberately Sandbox-only.
 
 ## Hosted demo
 
