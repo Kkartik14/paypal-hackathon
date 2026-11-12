@@ -1,5 +1,6 @@
-# Local planning notes (private working folder)
+# Local planning notes and docs (private working folders)
 local/
+/docs/
 
 # Dependencies
 node_modules/

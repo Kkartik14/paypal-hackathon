@@ -6,15 +6,9 @@ ScamBrake is a voice-first payment safety agent for social-engineering payment r
 
 Built for the PayPal AI Hackathon. Sandbox only — no live credentials and no real money.
 
-- [Security boundaries and known limits](docs/SECURITY.md)
-- [Prompt evaluation and release gates](docs/EVALUATION.md)
-- [Under-three-minute walkthrough](docs/WALKTHROUGH.md)
-- [Submission pack](docs/SUBMISSION.md)
-- [Deployment notes](docs/DEPLOYMENT.md)
-
 **Hosted app:** [scambrake-web-kappa.vercel.app](https://scambrake-web-kappa.vercel.app) · [API health](https://scambrake-api.vercel.app/api/health). The hosted build uses the same Sandbox-only API, Groq analysis, and deterministic policy as the local run. No real money can move.
 
-> **Walkthrough video:** record a sub-three-minute walkthrough with the running app and add the public YouTube URL here before submission. The script and shot list are in [`docs/WALKTHROUGH.md`](docs/WALKTHROUGH.md).
+> **Walkthrough video:** record a sub-three-minute walkthrough with the running app and add the public YouTube URL here before submission.
 
 ---
 
@@ -57,7 +51,6 @@ apps/api/evals           Labeled cases, committed replay cache, generated report
 packages/contracts       Shared Zod schemas and TypeScript types
 fixtures/audio           Committed synthetic sample call clips + transcripts
 scripts/generate-audio.mjs  Regenerates the clips with macOS say + ffmpeg
-docs/                    Security, evaluation, walkthrough, deployment
 ```
 
 ## Quick start (verified local path)
@@ -183,7 +176,7 @@ pnpm eval:check    # exit non-zero on a critical gate or a new false ALLOW
 - **Replay by default:** committed raw model outputs are prompt-hash-bound. Editing a released prompt without re-recording fails loudly instead of silently scoring stale output. `--live` records fresh Groq outputs with a 25-second throttle and never calls PayPal.
 - **No live A/B on money:** users are not randomized into a riskier prompt. A human reviews the scorecard and the prompt diff before the default version changes.
 
-The process, scorecard, gates, commands, current results, and limitations are in [`docs/EVALUATION.md`](docs/EVALUATION.md). Reports are written to `apps/api/evals/reports/`.
+The scorecard, gates, current results, and limitations are in [`apps/api/evals/reports/latest.md`](apps/api/evals/reports/latest.md). Reports are written to `apps/api/evals/reports/`.
 
 ## Environment variables
 
@@ -278,8 +271,6 @@ ScamBrake is a warning and a safer next step — not a fraud authority. In short
 - The AI cannot set the decision, edit rules, add recipients, or capture money.
 - Sandbox only. No real money moves.
 
-Read [`docs/SECURITY.md`](docs/SECURITY.md) for the threat model, ticket design, data handling, and production-hardening gaps.
-
 ## Tests
 
 ```bash
@@ -304,7 +295,7 @@ Every person, bank, merchant, and payment record in the saved profile and sample
 
 The web app is Vercel-ready. The API includes a Vercel serverless entry (`apps/api/api/index.js`) and `apps/api/vercel.json`, or can run on any Node 20+ host.
 
-See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for environment variables, two-project setup, sandbox constraints, and the verified local fallback.
+Deploy the API and web as two Vercel projects with root directories `apps/api` and `apps/web`. Set the API environment variables above plus `WEB_ORIGIN` to the web origin, and set `NEXT_PUBLIC_API_BASE_URL` on the web project to the API's `/api` URL. Keep `PAYPAL_ENV=sandbox`.
 
 ## AI and tool disclosure
 

@@ -5,7 +5,7 @@ Before implementing or changing the project, read:
 - `local/scambrake-plan/PLAN.md` for the agreed product, architecture, user flow, security boundaries, and deadline.
 - `local/scambrake-plan/RESEARCH.md` for source links, PayPal/Vercel constraints, and the current submission overlap scan.
 - `local/scambrake-plan/WALKTHROUGH.md` for the judge-facing story.
-- `docs/EVALUATION.md` and `local/scambrake-plan/EVALUATION.md` for the prompt evaluation process and the current decision log.
+- `local/scambrake-plan/EVALUATION.md` and the local `docs/EVALUATION.md` for the prompt evaluation process and the current decision log.
 
 ## Product and stack decisions
 
