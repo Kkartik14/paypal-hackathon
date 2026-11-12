@@ -30,8 +30,8 @@ export class AnalysisController {
   }
 }
 
-@Controller("v1/demo")
-export class DemoController {
+@Controller("v1/scenarios")
+export class ScenariosController {
   constructor(
     private readonly contacts: ContactsService,
     private readonly config: AppConfig,
@@ -49,8 +49,8 @@ export class DemoController {
         environment: "sandbox" as const,
         configured: this.config.paypalConfigured,
       },
-      demoNotice:
-        "Every person, organization, bank, merchant, and payment record in this demo is fictional. The PayPal Sandbox checkout pays the ScamBrake demo merchant, not the suspicious caller.",
+      notice:
+        "Every person, organization, bank, merchant, and payment record in this profile is fictional. The PayPal Sandbox checkout pays the ScamBrake Sandbox merchant, not the suspicious caller.",
     };
   }
 }

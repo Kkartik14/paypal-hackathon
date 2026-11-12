@@ -16,7 +16,6 @@ export function Brand({ linked = true }: { linked?: boolean }) {
         </svg>
       </span>
       <span className="brand-name">ScamBrake</span>
-      <span className="brand-demo">demo</span>
     </>
   );
 

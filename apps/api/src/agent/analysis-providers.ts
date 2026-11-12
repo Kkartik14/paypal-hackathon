@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import type {
-  DemoProfile,
+  Profile,
   Extraction,
   PaymentRequest,
   Scenario,
@@ -32,7 +32,7 @@ const MIN_EXTRACTION_RESERVE_MS = 12_000;
 
 export interface AgentAnalysisInput {
   payment: PaymentRequest;
-  profile: DemoProfile;
+  profile: Profile;
   transcript?: string;
   audio?: {
     base64: string;
@@ -63,7 +63,7 @@ export class MockAnalysisProvider implements AnalysisProviderClient {
     if (input.mockExtraction) {
       return {
         extraction: ExtractionSchema.parse(input.mockExtraction),
-        toolCalls: ["get_payment_rules", "get_saved_recipient (demo fixture)"],
+        toolCalls: ["get_payment_rules", "get_saved_recipient (saved profile fixture)"],
       };
     }
 
@@ -72,13 +72,13 @@ export class MockAnalysisProvider implements AnalysisProviderClient {
       throw new ApiException(
         422,
         "TRANSCRIPT_REQUIRED",
-        "The demo analysis engine needs a transcript. Add the words you heard, or configure Groq for audio analysis.",
+        "The offline analysis engine needs a transcript. Add the words you heard, or configure Groq for audio analysis.",
       );
     }
 
     return {
       extraction: ExtractionSchema.parse(heuristicExtraction(transcript, input.payment)),
-      toolCalls: ["get_payment_rules (demo fixture)", "get_saved_recipient (demo fixture)"],
+      toolCalls: ["get_payment_rules (saved profile fixture)", "get_saved_recipient (saved profile fixture)"],
     };
   }
 }
@@ -98,7 +98,7 @@ export class GroqAnalysisProvider implements AnalysisProviderClient {
       throw new ApiException(
         503,
         "AI_NOT_CONFIGURED",
-        "Groq is selected but GROQ_API_KEY is missing. No PayPal order was created. Configure the key or set AI_PROVIDER=mock for the labelled demo engine.",
+        "Groq is selected but GROQ_API_KEY is missing. No PayPal order was created. Configure the key or set AI_PROVIDER=mock for the labelled offline engine.",
       );
     }
 
@@ -635,7 +635,7 @@ function parseSpelledAmount(transcript: string): number | null {
 }
 
 /* ------------------------------------------------------------------ */
-/* Heuristic fallback for the explicitly labelled demo engine          */
+/* Heuristic fallback for the explicitly labelled offline engine       */
 /* ------------------------------------------------------------------ */
 
 function heuristicExtraction(transcript: string, payment: PaymentRequest): Extraction {
@@ -709,6 +709,6 @@ function heuristicExtraction(transcript: string, payment: PaymentRequest): Extra
     missingFields,
     confidence: amount === null ? 0.42 : 0.66,
     summary:
-      "Demo analysis of pasted text. It looks for amounts, claimed identities, and common pressure phrases. Configure Groq for live audio understanding and richer evidence.",
+      "Offline analysis of pasted text. It looks for amounts, claimed identities, and common pressure phrases. Configure Groq for live audio understanding and richer evidence.",
   };
 }

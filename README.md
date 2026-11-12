@@ -2,27 +2,27 @@
 
 **Before money moves, check who is asking.**
 
-ScamBrake is a voice-first payment safety agent for social-engineering payment requests. It reads a suspicious call, extracts the claimed identity and payment destination, checks a user's saved rules and recipients, and lets a deterministic server policy decide **ALLOW**, **HOLD**, or **BLOCK**. Only an ALLOW decision can create a PayPal Orders v2 **Sandbox** checkout for a fixed, fictional demo merchant.
+ScamBrake is a voice-first payment safety agent for social-engineering payment requests. It reads a suspicious call, extracts the claimed identity and payment destination, checks a user's saved rules and recipients, and lets a deterministic server policy decide **ALLOW**, **HOLD**, or **BLOCK**. Only an ALLOW decision can create a PayPal Orders v2 **Sandbox** checkout for a fixed, fictional Sandbox merchant.
 
 Built for the PayPal AI Hackathon. Sandbox only — no live credentials and no real money.
 
 - [Security boundaries and known limits](docs/SECURITY.md)
 - [Prompt evaluation and release gates](docs/EVALUATION.md)
-- [Under-three-minute demo script](docs/DEMO_SCRIPT.md)
+- [Under-three-minute walkthrough](docs/WALKTHROUGH.md)
 - [Deployment notes](docs/DEPLOYMENT.md)
 
-**Hosted demo:** [scambrake-web-kappa.vercel.app](https://scambrake-web-kappa.vercel.app) · [API health](https://scambrake-api.vercel.app/api/health). The hosted build uses the same Sandbox-only API, Groq analysis, and deterministic policy as the local run. No real money can move.
+**Hosted app:** [scambrake-web-kappa.vercel.app](https://scambrake-web-kappa.vercel.app) · [API health](https://scambrake-api.vercel.app/api/health). The hosted build uses the same Sandbox-only API, Groq analysis, and deterministic policy as the local run. No real money can move.
 
-> **Demo video:** record a sub-three-minute walkthrough with the running app and add the public YouTube URL here before submission. The script and shot list are in [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md).
+> **Walkthrough video:** record a sub-three-minute walkthrough with the running app and add the public YouTube URL here before submission. The script and shot list are in [`docs/WALKTHROUGH.md`](docs/WALKTHROUGH.md).
 
 ---
 
-## What the demo shows
+## What ScamBrake shows
 
 | Scenario | What happens | Expected result |
 | --- | --- | --- |
 | **The urgent support call** (fictional) | A caller claims to be bank security, invents a $900 transfer, pushes a “safe protection account,” and asks for secrecy. | **BLOCK** — the saved “never pay a support team” rule fires, the claimed identity contradicts the destination, and no PayPal order is created. |
-| **The saved merchant purchase** (fictional) | A coffee subscription renewal for $18 from Kettle & Co., a recipient already in the demo profile. | **ALLOW** — the user can choose to open a real PayPal Sandbox checkout for exactly $18.00 USD. |
+| **The saved merchant purchase** (fictional) | A coffee subscription renewal for $18 from Kettle & Co., a recipient already in the saved profile. | **ALLOW** — the user can choose to open a real PayPal Sandbox checkout for exactly $18.00 USD. |
 
 The differentiating moment is the separation of jobs: the AI gathers and quotes evidence; deterministic server code makes the money decision and holds the PayPal credentials.
 
@@ -33,7 +33,7 @@ The differentiating moment is the separation of jobs: the AI gathers and quotes 
 │  Next.js web (apps/web)  │ ────────────────────────▶ │  NestJS API (apps/api)    │
 │  review, evidence,       │                           │                           │
 │  checkout return         │                           │  Analysis  ─▶ Groq or     │
-└──────────────────────────┘                           │              demo engine  │
+└──────────────────────────┘                           │              offline engine│
                                                        │  Policy    ─▶ ALLOW/HOLD/ │
 ┌──────────────────────────┐        JSON-RPC           │              BLOCK        │
 │  MCP client              │ ────────────────────────▶ │  Payments  ─▶ ticket +    │
@@ -44,7 +44,7 @@ The differentiating moment is the separation of jobs: the AI gathers and quotes 
                                                        PayPal Sandbox (no live money)
 ```
 
-**Checkout gate.** An ALLOW analysis issues a 20-minute HMAC-signed decision ticket bound to the analysis ID, profile, recipient, amount, and currency. Creating an order requires a valid ticket and a server-fixed $18.00 USD demo merchant. Capturing requires buyer approval at PayPal, the same ticket, a fresh order read, and matching order ID, analysis ID, amount, currency, and (when configured) payee. The AI never sees PayPal credentials and has no capture tool.
+**Checkout gate.** An ALLOW analysis issues a 20-minute HMAC-signed decision ticket bound to the analysis ID, profile, recipient, amount, and currency. Creating an order requires a valid ticket and a server-fixed $18.00 USD Sandbox merchant. Capturing requires buyer approval at PayPal, the same ticket, a fresh order read, and matching order ID, analysis ID, amount, currency, and (when configured) payee. The AI never sees PayPal credentials and has no capture tool.
 
 ## Repository layout
 
@@ -54,9 +54,9 @@ apps/api                 NestJS 11 API (analysis, policy, payments, MCP)
 apps/api/src/evals       Offline prompt evaluation: runner, scorecards, gates, CLI
 apps/api/evals           Labeled cases, committed replay cache, generated reports
 packages/contracts       Shared Zod schemas and TypeScript types
-fixtures/audio           Committed synthetic demo call clips + transcripts
+fixtures/audio           Committed synthetic sample call clips + transcripts
 scripts/generate-audio.mjs  Regenerates the clips with macOS say + ffmpeg
-docs/                    Security, evaluation, demo script, deployment
+docs/                    Security, evaluation, walkthrough, deployment
 ```
 
 ## Quick start (verified local path)
@@ -77,7 +77,7 @@ Open **http://localhost:3000**. The API runs at **http://localhost:4000** with h
 
 No credentials are required for the main flow:
 
-- The labelled **demo analysis engine** (`AI_PROVIDER=mock`) analyzes the committed transcripts and the two sample scenarios.
+- The labelled **offline analysis engine** (`AI_PROVIDER=mock`) analyzes the committed transcripts and the two sample scenarios.
 - Policy decisions, evidence highlighting, MCP tools, and the full UI work.
 - PayPal checkout shows an amber “not configured” notice and returns `503` from order creation. Nothing is charged.
 
@@ -100,12 +100,12 @@ pnpm typecheck    # TypeScript across all packages
 pnpm test         # policy, ticket, config, Groq, PayPal, and eval tests
 pnpm eval         # replay v2-hardened vs v4-verbatim-quotes (no API key needed)
 pnpm eval:check   # fail on a critical eval gate or a new false ALLOW
-pnpm audio        # regenerate demo clips (macOS say + ffmpeg)
+pnpm audio        # regenerate sample clips (macOS say + ffmpeg)
 ```
 
 ## Enable Groq audio understanding
 
-By default the app runs the **demo analysis engine**, which reads the transcript and uses committed fixture extractions for the two sample scenarios. It is clearly labelled as a demo engine in the UI.
+By default the app runs the **offline analysis engine**, which reads the transcript and uses committed fixture extractions for the two sample scenarios. It is clearly labelled as an offline engine in the UI.
 
 For live audio analysis:
 
@@ -130,14 +130,14 @@ What Groq does:
 
 Failure behavior is deliberately loud: if `AI_PROVIDER=groq` and the key is missing, analysis returns `503`. If Groq errors, times out, or returns invalid JSON, analysis returns `502`. There is **no fallback to ALLOW**.
 
-Raw audio is decoded in memory, sent to Groq for transcription, and discarded. It is not written to disk or a database. Request logs exclude transcripts, audio, and contact data. Groq processes the submitted audio and transcript under its API terms; use the synthetic demo audio only.
+Raw audio is decoded in memory, sent to Groq for transcription, and discarded. It is not written to disk or a database. Request logs exclude transcripts, audio, and contact data. Groq processes the submitted audio and transcript under its API terms; use the synthetic sample audio only.
 
 ## Enable PayPal Sandbox checkout
 
 1. Sign in to the [PayPal Developer Dashboard](https://developer.paypal.com/dashboard/) and switch to **Sandbox**.
 2. Create a Sandbox app and copy its **Sandbox** client ID and secret.
-3. Create (or choose) a Sandbox **business** account to receive the demo payment. Set `PAYPAL_PAYEE_EMAIL` to that account's **Sandbox** email, not a real PayPal address; an unregistered payee produces a `PENDING` / `UNILATERAL` capture. Optionally name it `Kettle & Co.` so the Sandbox receipt matches the fictional demo merchant.
-4. Create a Sandbox **personal** account to use as the buyer during the demo. For a USD charge to an India-based merchant, choose a **United States** buyer: PayPal Sandbox declines India-to-India USD payments with `INSTRUMENT_DECLINED`.
+3. Create (or choose) a Sandbox **business** account to receive the Sandbox payment. Set `PAYPAL_PAYEE_EMAIL` to that account's **Sandbox** email, not a real PayPal address; an unregistered payee produces a `PENDING` / `UNILATERAL` capture. Optionally name it `Kettle & Co.` so the Sandbox receipt matches the fictional Sandbox merchant.
+4. Create a Sandbox **personal** account to use as the buyer during the walkthrough. For a USD charge to an India-based merchant, choose a **United States** buyer: PayPal Sandbox declines India-to-India USD payments with `INSTRUMENT_DECLINED`.
 5. Put the app credentials in `.env`:
 
    ```bash
@@ -155,12 +155,12 @@ Safety properties:
 
 - `PAYPAL_ENV` must be `sandbox`. Any other value refuses to start.
 - `PAYPAL_API_BASE` must be a PayPal Sandbox host (or localhost in development). Live hosts are refused.
-- The amount, currency, and demo merchant are fixed server-side. A client cannot choose a different checkout amount.
+- The amount, currency, and Sandbox merchant are fixed server-side. A client cannot choose a different checkout amount.
 - If `PAYPAL_PAYEE_EMAIL` is set, the server checks the order's payee before capture and refuses on mismatch.
 - The browser redirect is never treated as proof of payment. The return page re-reads the order from PayPal and shows a capture button only when PayPal reports `APPROVED`.
 - Capture is idempotent per order. A completed order displays the PayPal capture ID and status.
 
-> The PayPal Sandbox seller is the account that owns your API credentials. `Kettle & Co.` is a fictional demo merchant. Sandbox balances are not real money.
+> The PayPal Sandbox seller is the account that owns your API credentials. `Kettle & Co.` is a fictional Sandbox merchant. Sandbox balances are not real money.
 
 ## Prompt evaluation and release gates
 
@@ -211,7 +211,7 @@ The API loads the root `.env`, then `apps/api/.env`, then real process environme
 | Method | Path | Purpose |
 | --- | --- | --- |
 | `GET` | `/api/health` | Configuration and provider status. |
-| `GET` | `/api/v1/demo/scenarios` | Demo profile, merchant, scenarios, provider, PayPal status. |
+| `GET` | `/api/v1/scenarios` | Saved profile, merchant, scenarios, provider, PayPal status. |
 | `POST` | `/api/v1/analysis` | Analyze audio/transcript, run policy, optionally issue a ticket. |
 | `POST` | `/api/v1/orders` | Create a PayPal Sandbox order from an ALLOW ticket. |
 | `GET` | `/api/v1/orders/:id` | Read a ScamBrake order from PayPal. |
@@ -245,8 +245,8 @@ Or send `audioBase64` + `audioMimeType` (base64 without a `data:` prefix) and om
 | Tool | Purpose |
 | --- | --- |
 | `analyze_payment_request` | Full evidence + deterministic decision for a transcript and payment. Tickets and checkout are scrubbed. |
-| `get_saved_recipients` | The fictional demo profile's saved recipients. |
-| `get_payment_rules` | The fictional demo profile's limits and rules. |
+| `get_saved_recipients` | The fictional saved profile's recipients. |
+| `get_payment_rules` | The fictional saved profile's limits and rules. |
 | `get_paypal_order` | Read a ScamBrake-created PayPal Sandbox order. |
 
 MCP **cannot** create an order, issue a decision ticket, or capture money. There is no capture tool to call. If `MCP_API_KEY` is set, send it as `Authorization: Bearer …` or `x-api-key`.
@@ -272,7 +272,7 @@ Omit `headers` when `MCP_API_KEY` is empty. `GET /mcp` and `DELETE /mcp` return 
 ScamBrake is a warning and a safer next step — not a fraud authority. In short:
 
 - It does **not** authenticate voices, detect deepfakes, or verify an arbitrary external payee.
-- Recipient checks use a small, fictional, user-controlled demo profile. They are not a bank, PayPal, or universal scam directory.
+- Recipient checks use a small, fictional, user-controlled saved profile. They are not a bank, PayPal, or universal scam directory.
 - A `HOLD` is not a verdict; it means independent confirmation is required.
 - The AI cannot set the decision, edit rules, add recipients, or capture money.
 - Sandbox only. No real money moves.
@@ -287,17 +287,17 @@ pnpm test
 
 Covers the support-payment block, saved-recipient ALLOW, new-recipient HOLD, amount limits, submitted-detail mismatches, low-confidence HOLD, ticket signing, tampering, expiry, malformed input, startup guards for production secrets and live PayPal configuration, the Groq pipeline (Whisper transcription, read-only tool round, strict extraction, and timeout/rate-limit errors) against mocked HTTP responses, and the prompt evaluation harness (case validation, prompt-hash-bound replay, scorecard aggregation, critical gates, and promote/reject recommendations).
 
-The full ALLOW → create order → buyer approval → capture path was exercised against a local fake Orders v2 service. The API path was also validated live against Groq and PayPal Sandbox, including a completed `$18.00` Sandbox capture and an idempotent repeat capture. Real credentials are not used by the credential-free demo path.
+The full ALLOW → create order → buyer approval → capture path was exercised against a local fake Orders v2 service. The API path was also validated live against Groq and PayPal Sandbox, including a completed `$18.00` Sandbox capture and an idempotent repeat capture. Real credentials are not used by the credential-free local path.
 
-## Demo audio
+## Sample audio
 
-`fixtures/audio/*.m4a` are committed so the demo does not depend on text-to-speech at runtime. They were generated with macOS `say` and `ffmpeg` using synthetic voices; transcripts are in the matching `.txt` files and embedded in the API fixtures. Regenerate with:
+`fixtures/audio/*.m4a` are committed so the app does not depend on text-to-speech at runtime. They were generated with macOS `say` and `ffmpeg` using synthetic voices; transcripts are in the matching `.txt` files and embedded in the API fixtures. Regenerate with:
 
 ```bash
 pnpm audio   # requires macOS say + ffmpeg
 ```
 
-Every person, bank, merchant, and payment record in the demo is fictional.
+Every person, bank, merchant, and payment record in the saved profile and sample scenarios is fictional.
 
 ## Deployment
 
@@ -307,11 +307,11 @@ See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for environment variables, two-pr
 
 ## AI and tool disclosure
 
-- **Runtime AI:** Groq, using `whisper-large-v3-turbo` for speech-to-text and `openai/gpt-oss-120b` for read-only tool calls and strict structured extraction. If no key is configured, a clearly labelled deterministic demo engine runs instead.
+- **Runtime AI:** Groq, using `whisper-large-v3-turbo` for speech-to-text and `openai/gpt-oss-120b` for read-only tool calls and strict structured extraction. If no key is configured, a clearly labelled deterministic offline engine runs instead.
 - **Decision-making:** no AI. The ALLOW/HOLD/BLOCK decision comes from deterministic server policy in `apps/api/src/policy/policy.service.ts`.
 - **Prompt evaluation:** an offline harness with 12 authored synthetic cases and committed Groq outputs. It scores extraction plus the real policy; there is no LLM judge and no live A/B test on payment decisions.
 - **Development:** this repository was built with an AI coding agent (OpenCode) as part of the hackathon workflow. Policy and ticket behavior are covered by automated tests.
-- **Voices:** the demo clips use macOS synthetic text-to-speech. No real caller or human voice recording is included.
+- **Voices:** the sample clips use macOS synthetic text-to-speech. No real caller or human voice recording is included.
 - **Data:** all people, organizations, recipients, and merchants are fictional fixtures. PayPal is used in Sandbox mode only.
 
 ## License

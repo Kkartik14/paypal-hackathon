@@ -3,7 +3,7 @@ import type {
   CheckResult,
   Decision,
   DecisionReason,
-  DemoProfile,
+  Profile,
   Extraction,
   PaymentRequest,
   TrustedRecipient,
@@ -59,7 +59,7 @@ export class PolicyService {
   evaluate(input: {
     extraction: Extraction;
     payment: PaymentRequest;
-    profile: DemoProfile;
+    profile: Profile;
   }): PolicyOutcome {
     const { extraction, payment, profile } = input;
     const matchedRecipient = this.contacts.findRecipient(
@@ -142,7 +142,7 @@ export class PolicyService {
 
     checks.push({
       id: "saved-recipient",
-      label: "Recipient is in the saved demo profile",
+      label: "Recipient is in the saved profile",
       status: matchedRecipient ? "pass" : "fail",
       detail: matchedRecipient
         ? `Matched the saved record for ${matchedRecipient.name} (${matchedRecipient.type}).`
@@ -154,7 +154,7 @@ export class PolicyService {
         code: "RECIPIENT_NOT_IN_SAVED_PROFILE",
         title: "New recipient needs independent confirmation",
         detail:
-          "This recipient is not in the user's saved demo profile. ScamBrake holds the request instead of paying a new recipient automatically.",
+          "This recipient is not in the user's saved profile. ScamBrake holds the request instead of paying a new recipient automatically.",
         severity: "hold",
         ruleId: "rule-trusted-recipient-only",
       });

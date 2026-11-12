@@ -84,7 +84,7 @@ export const ExtractionSchema = z.object({
 export type Extraction = z.infer<typeof ExtractionSchema>;
 
 /* ------------------------------------------------------------------ */
-/* Demo profile (fictional fixtures)                                   */
+/* Saved profile (fictional fixtures)                                  */
 /* ------------------------------------------------------------------ */
 
 export const TrustedRecipientSchema = z.object({
@@ -108,7 +108,7 @@ export const PaymentRuleSchema = z.object({
 });
 export type PaymentRule = z.infer<typeof PaymentRuleSchema>;
 
-export const DemoProfileSchema = z.object({
+export const ProfileSchema = z.object({
   id: z.string().min(1),
   displayName: z.string().min(1),
   currency: z.literal("USD"),
@@ -119,16 +119,16 @@ export const DemoProfileSchema = z.object({
   trustedRecipients: z.array(TrustedRecipientSchema),
   fixtureNotice: z.string(),
 });
-export type DemoProfile = z.infer<typeof DemoProfileSchema>;
+export type Profile = z.infer<typeof ProfileSchema>;
 
-export const DemoMerchantSchema = z.object({
+export const MerchantSchema = z.object({
   name: z.string().min(1),
   identifier: z.string().nullable(),
   amount: z.number().positive(),
   currency: z.literal("USD"),
   sandboxNote: z.string(),
 });
-export type DemoMerchant = z.infer<typeof DemoMerchantSchema>;
+export type Merchant = z.infer<typeof MerchantSchema>;
 
 export const ScenarioSchema = z.object({
   id: z.string().min(1),
@@ -145,18 +145,18 @@ export const ScenarioSchema = z.object({
 });
 export type Scenario = z.infer<typeof ScenarioSchema>;
 
-export const DemoScenariosResponseSchema = z.object({
-  profile: DemoProfileSchema,
-  merchant: DemoMerchantSchema,
+export const ScenariosResponseSchema = z.object({
+  profile: ProfileSchema,
+  merchant: MerchantSchema,
   scenarios: z.array(ScenarioSchema),
   provider: AnalysisProviderSchema,
   paypal: z.object({
     environment: z.literal("sandbox"),
     configured: z.boolean(),
   }),
-  demoNotice: z.string(),
+  notice: z.string(),
 });
-export type DemoScenariosResponse = z.infer<typeof DemoScenariosResponseSchema>;
+export type ScenariosResponse = z.infer<typeof ScenariosResponseSchema>;
 
 /* ------------------------------------------------------------------ */
 /* Analysis result                                                     */
@@ -317,7 +317,7 @@ export type McpToolName = (typeof MCP_TOOL_NAMES)[number];
 
 export const DISCLAIMERS = [
   "ScamBrake analyzes the content of a request. It does not authenticate a caller's voice or prove that a voice is a deepfake.",
-  "Recipient checks use a small, fictional demo profile. They are not a PayPal directory, bank directory, or universal scam database.",
-  "The PayPal Sandbox purchase pays the ScamBrake demo merchant. It is not a payment to the suspicious caller, and no real money moves.",
+  "Recipient checks use a small, fictional saved profile. They are not a PayPal directory, bank directory, or universal scam database.",
+  "The PayPal Sandbox purchase pays the ScamBrake Sandbox merchant. It is not a payment to the suspicious caller, and no real money moves.",
   "The AI gathers evidence and explains it. A deterministic server policy makes the final ALLOW, HOLD, or BLOCK decision.",
 ] as const;

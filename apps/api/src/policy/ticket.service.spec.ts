@@ -5,7 +5,7 @@ import { TicketService, type DecisionTicketInput } from "./ticket.service";
 
 const ticketInput: DecisionTicketInput = {
   analysisId: "an_test123",
-  profileId: "demo-riya-sharma",
+  profileId: "profile-riya-sharma",
   recipientName: "Kettle & Co.",
   recipientIdentifier: "billing@kettleandco.example",
   amount: 18,

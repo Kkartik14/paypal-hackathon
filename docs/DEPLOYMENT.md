@@ -5,9 +5,9 @@ ScamBrake is two deployable pieces:
 - **web** — Next.js 15 (`apps/web`)
 - **api** — NestJS 11 (`apps/api`) with REST and MCP
 
-The reproducible local run in the README and the hosted demo below are both verified. The deployment is deliberately Sandbox-only.
+The reproducible local run in the README and the hosted app below are both verified. The deployment is deliberately Sandbox-only.
 
-## Hosted demo
+## Hosted app
 
 | Piece | URL |
 | --- | --- |
@@ -39,7 +39,7 @@ Two Vercel-specific details are intentional:
 Environment variables:
 
 ```bash
-AI_PROVIDER=groq              # or mock for a credential-free demo
+AI_PROVIDER=groq              # or mock for a credential-free local run
 GROQ_API_KEY=...
 GROQ_MODEL=openai/gpt-oss-120b
 GROQ_TRANSCRIPTION_MODEL=whisper-large-v3-turbo
@@ -72,7 +72,7 @@ Verify after deployment:
 curl https://your-api.vercel.app/api/health
 ```
 
-`status` is `ok` only when PayPal, AI, and the ticket secret are all configured. `degraded` is expected for a credential-free demo.
+`status` is `ok` only when PayPal, AI, and the ticket secret are all configured. `degraded` is expected for a credential-free local run.
 
 ### 2. Web project
 
@@ -167,7 +167,7 @@ pnpm eval:check        # replay only; no Groq or PayPal credentials
 | `502 PAYPAL_AUTH_FAILED` | Live credentials used, or Sandbox app disabled. |
 | `INSTRUMENT_DECLINED` on capture | The buyer's funding source failed. An India buyer cannot pay an India merchant in USD in Sandbox; use a US personal buyer or change the charge currency. The order stays `APPROVED` and no money moves. |
 | Capture status `PENDING` / `UNILATERAL` | The payee email is not a registered or confirmed Sandbox business account, or the merchant has not accepted the payment. Set `PAYPAL_PAYEE_EMAIL` to the Sandbox business account email and/or accept the payment in the merchant account. The UI shows pending, not paid. |
-| Checkout button missing | Decision is not `ALLOW`, amount is not exactly `$18.00`, or the recipient is not the demo merchant. |
+| Checkout button missing | Decision is not `ALLOW`, amount is not exactly `$18.00`, or the recipient is not the Sandbox merchant. |
 | PayPal returns to the wrong URL | `WEB_ORIGIN` first entry is wrong; redeploy the API. |
 | Browser calls `localhost:4000` in production | `NEXT_PUBLIC_API_BASE_URL` was missing at build time; rebuild the web project. |
 | `502 AI_PROVIDER_UNAVAILABLE` / `AI_NOT_CONFIGURED` | Groq selected without a valid key, quota, or network access. No order was created. |
@@ -179,4 +179,4 @@ pnpm eval:check        # replay only; no Groq or PayPal credentials
 | `The pattern "api/index.cjs" ... doesn't match any Serverless Functions` | Rename the entry to `api/index.js` and update the `functions` key in `apps/api/vercel.json`. Vercel only recognizes `.js`, `.mjs`, `.ts`, and similar function extensions, not `.cjs`. |
 | Vercel function cannot find `dist/serverless.js` | Build command did not run, or source outside the root directory is excluded. |
 
-Never switch to live PayPal credentials to “make the demo work.” A missing Sandbox checkout is acceptable; a live payment is not.
+Never switch to live PayPal credentials to “make checkout work.” A missing Sandbox checkout is acceptable; a live payment is not.

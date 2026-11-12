@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { DemoProfile, PaymentRequest } from "@scambrake/contracts";
+import type { Profile, PaymentRequest } from "@scambrake/contracts";
 
 /**
  * Prompts are versioned code. The production default is the only version the
@@ -169,7 +169,7 @@ export function promptHash(version: PromptVersion): string {
 export interface ExtractionPromptInput {
   transcript: string;
   payment: PaymentRequest;
-  profile: DemoProfile;
+  profile: Profile;
   toolFindings: string[];
 }
 

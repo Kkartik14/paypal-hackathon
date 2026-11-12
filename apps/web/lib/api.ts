@@ -2,12 +2,12 @@ import type { z } from "zod";
 import {
   AnalysisResultSchema,
   CreateOrderResponseSchema,
-  DemoScenariosResponseSchema,
+  ScenariosResponseSchema,
   OrderViewSchema,
   type AnalysisResult,
   type AnalyzeRequest,
   type CreateOrderResponse,
-  type DemoScenariosResponse,
+  type ScenariosResponse,
   type OrderView,
 } from "@scambrake/contracts";
 
@@ -80,8 +80,8 @@ async function request<S extends z.ZodTypeAny>(
   return parsed.data;
 }
 
-export function getDemoScenarios(): Promise<DemoScenariosResponse> {
-  return request("/v1/demo/scenarios", { method: "GET" }, DemoScenariosResponseSchema);
+export function getScenarios(): Promise<ScenariosResponse> {
+  return request("/v1/scenarios", { method: "GET" }, ScenariosResponseSchema);
 }
 
 export function analyzeRequest(input: AnalyzeRequest): Promise<AnalysisResult> {

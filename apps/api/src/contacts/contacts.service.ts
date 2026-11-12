@@ -1,34 +1,34 @@
 import { Injectable } from "@nestjs/common";
-import type { DemoMerchant, DemoProfile, Scenario, TrustedRecipient } from "@scambrake/contracts";
-import { DEMO_MERCHANT, DEMO_PROFILE, DEMO_SCENARIOS } from "../demo/demo-data";
+import type { Merchant, Profile, Scenario, TrustedRecipient } from "@scambrake/contracts";
+import { SANDBOX_MERCHANT, SCAMBRAKE_PROFILE, SCENARIOS } from "../fixtures/profile-data";
 
 @Injectable()
 export class ContactsService {
-  getProfile(): DemoProfile {
-    return DEMO_PROFILE;
+  getProfile(): Profile {
+    return SCAMBRAKE_PROFILE;
   }
 
   listRecipients(): TrustedRecipient[] {
-    return DEMO_PROFILE.trustedRecipients;
+    return SCAMBRAKE_PROFILE.trustedRecipients;
   }
 
-  getMerchant(): DemoMerchant {
-    return DEMO_MERCHANT;
+  getMerchant(): Merchant {
+    return SANDBOX_MERCHANT;
   }
 
   listScenarios(): Scenario[] {
-    return DEMO_SCENARIOS;
+    return SCENARIOS;
   }
 
   getScenario(id: string): Scenario | null {
-    return DEMO_SCENARIOS.find((scenario) => scenario.id === id) ?? null;
+    return SCENARIOS.find((scenario) => scenario.id === id) ?? null;
   }
 
   findRecipient(name?: string | null, identifier?: string | null): TrustedRecipient | null {
     const cleanIdentifier = normalizeIdentifier(identifier);
     const cleanName = normalizeName(name);
 
-    for (const recipient of DEMO_PROFILE.trustedRecipients) {
+    for (const recipient of SCAMBRAKE_PROFILE.trustedRecipients) {
       if (cleanIdentifier && recipient.identifier && normalizeIdentifier(recipient.identifier) === cleanIdentifier) {
         return recipient;
       }
@@ -44,13 +44,13 @@ export class ContactsService {
     return null;
   }
 
-  isDemoMerchant(name?: string | null, identifier?: string | null): boolean {
+  isMerchant(name?: string | null, identifier?: string | null): boolean {
     const cleanIdentifier = normalizeIdentifier(identifier);
-    if (cleanIdentifier && DEMO_MERCHANT.identifier && cleanIdentifier === normalizeIdentifier(DEMO_MERCHANT.identifier)) {
+    if (cleanIdentifier && SANDBOX_MERCHANT.identifier && cleanIdentifier === normalizeIdentifier(SANDBOX_MERCHANT.identifier)) {
       return true;
     }
     const cleanName = normalizeName(name);
-    return Boolean(cleanName && nameMatches(cleanName, DEMO_MERCHANT.name));
+    return Boolean(cleanName && nameMatches(cleanName, SANDBOX_MERCHANT.name));
   }
 }
 

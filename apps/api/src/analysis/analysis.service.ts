@@ -11,7 +11,7 @@ import { DISCLAIMERS } from "@scambrake/contracts";
 import { AgentService } from "../agent/agent.service";
 import { ApiException } from "../common/api.exception";
 import { ContactsService } from "../contacts/contacts.service";
-import { MOCK_SCENARIO_EXTRACTIONS } from "../demo/demo-data";
+import { MOCK_SCENARIO_EXTRACTIONS } from "../fixtures/profile-data";
 import { PolicyService } from "../policy/policy.service";
 import { TicketService } from "../policy/ticket.service";
 
@@ -127,14 +127,14 @@ export class AnalysisService {
     const id = request.scenarioId ?? "";
     const scenario = this.contacts.getScenario(id);
     if (!scenario) {
-      throw new ApiException(404, "SCENARIO_NOT_FOUND", "That demo scenario does not exist.");
+      throw new ApiException(404, "SCENARIO_NOT_FOUND", "That scenario does not exist.");
     }
     return scenario;
   }
 
   private checkoutSummary(payment: PaymentRequest, decision: string): CheckoutSummary {
     const merchant = this.contacts.getMerchant();
-    const isMerchant = this.contacts.isDemoMerchant(
+    const isMerchant = this.contacts.isMerchant(
       payment.recipientName,
       payment.recipientIdentifier,
     );
@@ -144,9 +144,9 @@ export class AnalysisService {
     if (decision !== "ALLOW") {
       reason = "No checkout: the policy did not allow this request, so no PayPal order was created.";
     } else if (!isMerchant) {
-      reason = `This demo checkout only pays the saved ScamBrake Sandbox merchant, ${merchant.name}.`;
+      reason = `This checkout can only pay the saved ScamBrake Sandbox merchant, ${merchant.name}.`;
     } else if (!amountMatches) {
-      reason = `The demo checkout is fixed at $${merchant.amount.toFixed(2)} USD.`;
+      reason = `The Sandbox checkout is fixed at $${merchant.amount.toFixed(2)} USD.`;
     }
 
     return {

@@ -5,8 +5,8 @@ import type {
   CheckResult,
   Decision,
   DecisionReason,
-  DemoMerchant,
-  DemoProfile,
+  Merchant,
+  Profile,
 } from "@scambrake/contracts";
 import { ArrowRight, ArrowUpRight, AlertTriangle, CheckCircle, FileAudio, MinusCircle, Refresh, ShieldCheck, XCircle } from "./icons";
 import { CopyId } from "./copy-id";
@@ -32,7 +32,7 @@ const DECISION_COPY: Record<
   ALLOW: {
     title: "Saved recipient. Saved amount. No pressure.",
     subtitle:
-      "The server policy allows this request. If you choose, ScamBrake can now create a PayPal Sandbox order for the demo merchant.",
+      "The server policy allows this request. If you choose, ScamBrake can now create a PayPal Sandbox order for the Sandbox merchant.",
     short: "Checkout is available only after your click.",
   },
 };
@@ -51,8 +51,8 @@ export function AnalysisResultView({
   onTrySafe,
 }: {
   analysis: AnalysisResult;
-  profile: DemoProfile;
-  merchant: DemoMerchant;
+  profile: Profile;
+  merchant: Merchant;
   scenarioTitle: string | null;
   paypalConfigured: boolean;
   paying: boolean;
@@ -65,7 +65,7 @@ export function AnalysisResultView({
   const decision = analysis.decision;
   const copy = DECISION_COPY[decision];
   const providerLabel =
-    analysis.provider === "groq" ? "Groq live analysis" : "Demo analysis engine";
+    analysis.provider === "groq" ? "Groq live analysis" : "Offline analysis engine";
   const identity = analysis.extraction.claimedIdentity;
   const organization = analysis.extraction.claimedOrganization;
   const destination =
@@ -205,7 +205,7 @@ export function AnalysisResultView({
               </div>
             </div>
             <p className="profile-note">
-              Checked against the fictional demo profile for {profile.displayName}.
+              Checked against the fictional saved profile for {profile.displayName}.
             </p>
           </section>
 
@@ -246,12 +246,12 @@ export function AnalysisResultView({
         </button>
         <button type="button" className="btn btn-text" onClick={onReset}>
           <Refresh width={14} height={14} />
-          Reset demo
+          Reset
         </button>
       </div>
 
       <p className="result-disclaimer">
-        Fictional demo data. The model extracts evidence; the server policy decides. ScamBrake does
+        Fictional profile data. The model extracts evidence; the server policy decides. ScamBrake does
         not authenticate voices, detect deepfakes, or verify an arbitrary external payee.
       </p>
     </section>
@@ -320,7 +320,7 @@ function CheckoutPanel({
   onPay,
 }: {
   analysis: AnalysisResult;
-  merchant: DemoMerchant;
+  merchant: Merchant;
   paypalConfigured: boolean;
   paying: boolean;
   payError: string | null;
@@ -338,7 +338,7 @@ function CheckoutPanel({
       </div>
       <div className="checkout-merchant">
         <div>
-          <span className="mini-label">Demo merchant</span>
+          <span className="mini-label">Sandbox merchant</span>
           <strong>{merchant.name}</strong>
           <small>{merchant.identifier ?? "Sandbox seller"}</small>
         </div>

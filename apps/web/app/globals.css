@@ -189,18 +189,6 @@ code {
   letter-spacing: -0.025em;
 }
 
-.brand-demo {
-  font-family: var(--mono);
-  font-size: 8.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  border: 1px solid var(--line-strong);
-  border-radius: 5px;
-  padding: 2px 5px;
-  transform: translateY(-1px);
-}
-
 .site-nav {
   display: flex;
   align-items: center;
@@ -3192,10 +3180,6 @@ code {
 
 @media (max-width: 480px) {
   .header-badge {
-    display: none;
-  }
-
-  .brand-demo {
     display: none;
   }
 

@@ -1,6 +1,6 @@
 # Security, privacy, and limitations
 
-ScamBrake is a hackathon demo, not a production fraud system. This document describes what it actually enforces, what it deliberately does not claim, and what would need to change before handling real users or money.
+ScamBrake is a hackathon project, not a production fraud system. This document describes what it actually enforces, what it deliberately does not claim, and what would need to change before handling real users or money.
 
 ## Scope
 
@@ -24,7 +24,7 @@ ScamBrake does **not**:
 - move real money, store a payment method, or hold live PayPal credentials;
 - replace a bank's fraud team, a chargeback process, or law enforcement.
 
-Recipient checks operate only on the fictional demo profile in `apps/api/src/demo/demo-data.ts`. The UI labels this data as a demo fixture.
+Recipient checks operate only on the fictional saved profile in `apps/api/src/fixtures/profile-data.ts`. The UI labels this data as a fictional fixture.
 
 ## Trust boundaries
 
@@ -32,7 +32,7 @@ Recipient checks operate only on the fictional demo profile in `apps/api/src/dem
 untrusted audio / transcript / form input
         │
         ▼
-AI provider (Groq or demo engine)    ──► evidence only, schema-validated
+AI provider (Groq or offline engine)    ──► evidence only, schema-validated
         │
         ▼
 deterministic policy (server code)   ──► ALLOW / HOLD / BLOCK
@@ -63,7 +63,7 @@ Implemented in `apps/api/src/policy/policy.service.ts`. It checks:
 
 - the saved rule “Never pay a support or security team”;
 - claimed identity versus payment destination;
-- whether the recipient is in the saved demo profile;
+- whether the recipient is in the saved profile;
 - the user's `$100` no-confirmation limit and per-recipient limits;
 - urgency, secrecy, authority, threat, and payment-redirection cues;
 - extraction completeness and confidence (`< 55%` holds);
@@ -88,11 +88,11 @@ A passing evaluation is a regression gate for this small synthetic set. It is no
 ## Decision tickets
 
 - HMAC-SHA-256 over a base64url JSON payload, signed with `DECISION_TICKET_SECRET`.
-- Payload binds the analysis ID, profile ID, recipient name/identifier, amount, currency, purpose, demo merchant, issue time, expiry, and a random nonce.
+- Payload binds the analysis ID, profile ID, recipient name/identifier, amount, currency, purpose, Sandbox merchant, issue time, expiry, and a random nonce.
 - Default lifetime is 20 minutes (`DECISION_TICKET_TTL_SECONDS`).
 - Verification uses a length check and `timingSafeEqual`; expiry and future-issue timestamps are rejected.
 - Production (`NODE_ENV=production`) refuses to start without a secret of at least 32 characters. The development fallback is logged as a warning and exists only for local runs.
-- Tickets are **signed, not encrypted**. Their contents are readable, but they contain no credentials or personal data beyond the fictional demo fields.
+- Tickets are **signed, not encrypted**. Their contents are readable, but they contain no credentials or personal data beyond the fictional fields.
 - The server is stateless, so tickets are not stored or marked single-use. Replaying one can only re-request the same idempotent PayPal order (the creation key is derived from the analysis ID). Capture is still bound to the order's live PayPal state and re-verified fields.
 
 ## PayPal controls
@@ -100,8 +100,8 @@ A passing evaluation is a regression gate for this small synthetic set. It is no
 - `PAYPAL_ENV` must be exactly `sandbox`; any other value aborts startup.
 - `PAYPAL_API_BASE` must resolve to a PayPal Sandbox host, or localhost in development. Live API hosts are refused.
 - Credentials are read only from server-side environment variables. They are never sent to the browser, included in tickets, exposed through MCP, or logged.
-- The demo checkout amount (`$18.00 USD`), currency (`USD`), and merchant identity are fixed server-side.
-- Order creation requires an ALLOW ticket and a recipient that matches the demo merchant.
+- The Sandbox checkout amount (`$18.00 USD`), currency (`USD`), and merchant identity are fixed server-side.
+- Order creation requires an ALLOW ticket and a recipient that matches the Sandbox merchant.
 - Capture requires:
   - a valid, unexpired ticket;
   - a fresh `GET` of the order from PayPal;
@@ -114,14 +114,14 @@ A passing evaluation is a regression gate for this small synthetic set. It is no
 
 ## Data handling
 
-- **Audio:** decoded in memory, size- and type-checked (max 3 MB), forwarded to Groq Whisper when enabled, then discarded. It is never written to disk or a database. Use only the synthetic demo audio; Groq processes the submitted audio under its API terms.
+- **Audio:** decoded in memory, size- and type-checked (max 3 MB), forwarded to Groq Whisper when enabled, then discarded. It is never written to disk or a database. Use only the synthetic sample audio; Groq processes the submitted audio under its API terms.
 - **Transcripts:** processed in memory and returned to the caller. Application logs exclude transcript text, pressure quotes, audio, and contact data.
 - **Logs:** analysis logs contain the analysis ID, provider, decision, checkout availability, and step timings. PayPal logs contain order/capture IDs and status. No API keys or raw personal data.
-- **Browser storage:** the pending order ID, ticket, and analysis ID are kept in `sessionStorage` for the checkout return. They are removed on demo reset and do not persist across browser sessions.
+- **Browser storage:** the pending order ID, ticket, and analysis ID are kept in `sessionStorage` for the checkout return. They are removed on reset and do not persist across browser sessions.
 - **No account system, database, or analytics** is included. Restarting the server loses no stored user data because none is stored.
-- **MCP:** tool calls return the fictional demo profile and analysis output. They do not return tickets or credentials.
+- **MCP:** tool calls return the fictional saved profile and analysis output. They do not return tickets or credentials.
 
-Because this is a public demo, do not paste sensitive real call recordings or personal data into it. Use the fictional samples.
+Because this is a public deployment, do not paste sensitive real call recordings or personal data into it. Use the fictional samples.
 
 ## Configuration and secrets
 
@@ -139,7 +139,7 @@ Because this is a public demo, do not paste sensitive real call recordings or pe
 - `GET` and `DELETE` return `405` because no sessions or SSE stream exist.
 - `analyze_payment_request` is rate-limited and bounded to a 20,000-character transcript and a validated payment object.
 
-If the demo is deployed publicly without `MCP_API_KEY`, anyone can spend your Groq quota through the analysis tool. Set the key or keep the deployment private.
+If the app is deployed publicly without `MCP_API_KEY`, anyone can spend your Groq quota through the analysis tool. Set the key or keep the deployment private.
 
 ## Abuse and availability
 

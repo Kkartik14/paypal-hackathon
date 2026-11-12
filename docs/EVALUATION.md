@@ -16,7 +16,7 @@ The evaluation scores the **real** production pieces:
 
 There is no LLM judge and no score for prose quality. A summary that reads well but loses a pressure quote or invents an amount is a failure.
 
-The evaluation isolates the extraction phase. The prompt includes the demo profile's rules and saved recipients; the separate read-only tool round is covered by the provider tests. Transcription is not scored here.
+The evaluation isolates the extraction phase. The prompt includes the saved profile's rules and saved recipients; the separate read-only tool round is covered by the provider tests. Transcription is not scored here.
 
 ## The labeled case set
 
@@ -221,7 +221,7 @@ See [`apps/api/evals/reports/latest.md`](../apps/api/evals/reports/latest.md) fo
 ## Limitations
 
 - The cases are synthetic and were authored by the same team that wrote the prompts. The holdout split is procedural, not an unbiased benchmark.
-- The set is small and English-only, with USD amounts and a fictional demo profile. It is a regression gate, not a claim of real-world scam-detection accuracy.
+- The set is small and English-only, with USD amounts and a fictional saved profile. It is a regression gate, not a claim of real-world scam-detection accuracy.
 - The evaluation scores extraction plus deterministic policy, not Whisper transcription quality or the read-only tool round.
 - Exact decision accuracy can be sensitive to labeling choices. The safe decision rate and false `ALLOW` count are the primary release signals.
 - Model or provider drift can change behavior even when the prompt hash matches. Re-record the cache when the model, provider, or prompt changes.

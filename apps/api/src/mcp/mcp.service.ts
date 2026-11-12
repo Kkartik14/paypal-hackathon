@@ -83,7 +83,7 @@ export class McpService {
               version: "0.1.0",
             },
             instructions:
-              "ScamBrake reviews social-engineering payment requests against a fictional saved profile. Deterministic server policy returns ALLOW, HOLD, or BLOCK. This MCP endpoint is read-only: it can analyze, look up demo rules/recipients, and read PayPal Sandbox order status. It cannot create orders or capture money.",
+              "ScamBrake reviews social-engineering payment requests against a fictional saved profile. Deterministic server policy returns ALLOW, HOLD, or BLOCK. This MCP endpoint is read-only: it can analyze, look up saved rules/recipients, and read PayPal Sandbox order status. It cannot create orders or capture money.",
           });
         case "ping":
           return this.result(id, {});
@@ -231,14 +231,14 @@ const TOOLS: ToolDefinition[] = [
   },
   {
     name: "get_saved_recipients",
-    title: "List saved demo recipients",
+    title: "List saved recipients",
     description: "Return the fictional saved recipients used by ScamBrake's policy checks. Read-only.",
     inputSchema: { type: "object", properties: {} },
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
   },
   {
     name: "get_payment_rules",
-    title: "Read demo payment rules",
+    title: "Read payment rules",
     description: "Return the fictional user's payment limits and rules. Read-only.",
     inputSchema: { type: "object", properties: {} },
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },

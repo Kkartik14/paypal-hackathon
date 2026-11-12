@@ -3,7 +3,7 @@ import type { Request } from "express";
 
 /**
  * Best-effort in-process rate limiting. Serverless instances do not share
- * memory, so this is a speed bump rather than a hard quota. The public demo is
+ * memory, so this is a speed bump rather than a hard quota. The public deployment is
  * also protected by the platform's own limits and by bounding AI input sizes.
  */
 @Injectable()

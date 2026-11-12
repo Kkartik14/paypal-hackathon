@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { AnalysisResult, DemoScenariosResponse, Scenario } from "@scambrake/contracts";
+import type { AnalysisResult, ScenariosResponse, Scenario } from "@scambrake/contracts";
 import { AnalysisResultView } from "@/components/analysis-result";
 import { AudioPlayer } from "@/components/audio-player";
 import { Brand } from "@/components/brand";
@@ -18,7 +18,7 @@ import {
   ShieldCheck,
   Spark,
 } from "@/components/icons";
-import { ApiClientError, analyzeRequest, createOrder, getDemoScenarios } from "@/lib/api";
+import { ApiClientError, analyzeRequest, createOrder, getScenarios } from "@/lib/api";
 import { fetchScenarioAudio, fileToAudioPayload, MAX_AUDIO_BYTES } from "@/lib/audio";
 import { formatMoney } from "@/lib/format";
 
@@ -54,8 +54,8 @@ function messageFor(error: unknown): string {
 }
 
 export default function HomePage() {
-  const [demo, setDemo] = useState<DemoScenariosResponse | null>(null);
-  const [demoError, setDemoError] = useState<string | null>(null);
+  const [catalog, setCatalog] = useState<ScenariosResponse | null>(null);
+  const [catalogError, setCatalogError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [transcript, setTranscript] = useState("");
@@ -68,16 +68,16 @@ export default function HomePage() {
   const initialised = useRef(false);
 
   const selectedScenario =
-    demo?.scenarios.find((scenario) => scenario.id === selectedId) ?? null;
+    catalog?.scenarios.find((scenario) => scenario.id === selectedId) ?? null;
   const scenarioForResult =
-    demo?.scenarios.find((scenario) => scenario.id === analysis?.scenarioId) ?? null;
+    catalog?.scenarios.find((scenario) => scenario.id === analysis?.scenarioId) ?? null;
 
   useEffect(() => {
     let cancelled = false;
-    getDemoScenarios()
+    getScenarios()
       .then((data) => {
         if (cancelled) return;
-        setDemo(data);
+        setCatalog(data);
         if (!initialised.current) {
           initialised.current = true;
           const first = data.scenarios[0] ?? null;
@@ -90,7 +90,7 @@ export default function HomePage() {
       })
       .catch((loadError: unknown) => {
         if (cancelled) return;
-        setDemoError(messageFor(loadError));
+        setCatalogError(messageFor(loadError));
       });
     return () => {
       cancelled = true;
@@ -131,8 +131,8 @@ export default function HomePage() {
     setPaying(false);
   }
 
-  function resetDemo() {
-    const first = demo?.scenarios[0] ?? null;
+  function reset() {
+    const first = catalog?.scenarios[0] ?? null;
     if (first) {
       applyScenario(first);
     } else {
@@ -155,7 +155,7 @@ export default function HomePage() {
   }
 
   function trySafeScenario() {
-    const safe = demo?.scenarios.find((scenario) => scenario.kind === "safe") ?? null;
+    const safe = catalog?.scenarios.find((scenario) => scenario.kind === "safe") ?? null;
     if (safe) {
       applyScenario(safe);
       window.setTimeout(() => {
@@ -166,7 +166,7 @@ export default function HomePage() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (stage === "analyzing" || !demo) return;
+    if (stage === "analyzing" || !catalog) return;
 
     setError(null);
     setPayError(null);
@@ -280,7 +280,7 @@ export default function HomePage() {
   }
 
   const providerLabel =
-    demo?.provider === "groq" ? "Groq live analysis" : "Demo analysis engine";
+    catalog?.provider === "groq" ? "Groq live analysis" : "Offline analysis engine";
 
   return (
     <>
@@ -419,14 +419,14 @@ export default function HomePage() {
             </p>
           </div>
 
-          {demoError ? (
+          {catalogError ? (
             <div className="load-error">
               <span className="load-error-icon">
                 <Shield width={22} height={22} />
               </span>
               <div>
                 <h3>The review desk could not load.</h3>
-                <p>{demoError}</p>
+                <p>{catalogError}</p>
                 <p className="load-error-hint">
                   Start the API with <code>pnpm dev</code> from the repository root, then reload.
                 </p>
@@ -444,7 +444,7 @@ export default function HomePage() {
                   <span className="fictional-pill">fictional</span>
                 </div>
                 <div className="scenario-list">
-                  {demo?.scenarios.map((scenario) => {
+                  {catalog?.scenarios.map((scenario) => {
                     const selected = scenario.id === selectedId;
                     return (
                       <button
@@ -471,7 +471,7 @@ export default function HomePage() {
                       </button>
                     );
                   })}
-                  {!demo &&
+                  {!catalog &&
                     [0, 1].map((index) => <div key={index} className="scenario-skeleton" />)}
                 </div>
                 <button type="button" className="scratch-link" onClick={startFromScratch}>
@@ -479,7 +479,7 @@ export default function HomePage() {
                   <ArrowUpRight width={13} height={13} />
                 </button>
                 <p className="fixture-note">
-                  Every person, bank, and merchant here is fictional. The profile is a demo
+                  Every person, bank, and merchant here is fictional. The profile is a saved
                   fixture, not a PayPal or bank directory.
                 </p>
               </aside>
@@ -490,7 +490,7 @@ export default function HomePage() {
                     <p className="section-kicker">Payment request</p>
                     <h3>{selectedScenario ? selectedScenario.title : "Custom request"}</h3>
                   </div>
-                  <span className={`provider-pill ${demo?.provider === "groq" ? "is-live" : ""}`}>
+                  <span className={`provider-pill ${catalog?.provider === "groq" ? "is-live" : ""}`}>
                     <span className="provider-dot" />
                     {providerLabel}
                   </span>
@@ -499,7 +499,7 @@ export default function HomePage() {
                 {selectedScenario && (
                   <div className="selected-sample">
                     <div className="selected-sample-copy">
-                      <span className="mini-label">Demo call audio</span>
+                      <span className="mini-label">Call audio</span>
                       <strong>{selectedScenario.title}</strong>
                       <small>{selectedScenario.fixtureNotice}</small>
                     </div>
@@ -510,10 +510,10 @@ export default function HomePage() {
                   </div>
                 )}
 
-                {demo?.provider === "mock" && (
+                {catalog?.provider === "mock" && (
                   <div className="notice notice-soft">
                     <Spark width={14} height={14} />
-                    The demo engine reads the transcript. Add <code>GROQ_API_KEY</code> and set{" "}
+                    The offline engine reads the transcript. Add <code>GROQ_API_KEY</code> and set{" "}
                     <code>AI_PROVIDER=groq</code> for live audio understanding.
                   </div>
                 )}
@@ -635,7 +635,7 @@ export default function HomePage() {
                   <button
                     type="submit"
                     className="btn btn-primary btn-submit"
-                    disabled={stage === "analyzing" || !demo}
+                    disabled={stage === "analyzing" || !catalog}
                   >
                     {stage === "analyzing" ? (
                       <>
@@ -651,7 +651,7 @@ export default function HomePage() {
                   </button>
                 </div>
 
-                {demo && !demo.paypal.configured && (
+                {catalog && !catalog.paypal.configured && (
                   <p className="server-note">
                     <span className="server-dot" /> Sandbox checkout is not configured on this
                     server. Analysis and policy still work; add PayPal Sandbox credentials to
@@ -683,9 +683,9 @@ export default function HomePage() {
                 </p>
                 <div className="analyzing-meta">
                   <span className="spinner" />
-                  {demo?.provider === "groq"
+                  {catalog?.provider === "groq"
                     ? "Groq transcription and analysis usually take a few seconds."
-                    : "The demo engine responds almost instantly."}
+                    : "The offline engine responds almost instantly."}
                 </div>
                 <div className="analyzing-note">
                   <Lock width={13} height={13} />
@@ -697,18 +697,18 @@ export default function HomePage() {
           </section>
         )}
 
-        {stage === "result" && analysis && demo && (
+        {stage === "result" && analysis && catalog && (
           <div className="shell">
             <AnalysisResultView
               analysis={analysis}
-              profile={demo.profile}
-              merchant={demo.merchant}
+              profile={catalog.profile}
+              merchant={catalog.merchant}
               scenarioTitle={scenarioForResult?.title ?? null}
-              paypalConfigured={demo.paypal.configured}
+              paypalConfigured={catalog.paypal.configured}
               paying={paying}
               payError={payError}
               onPay={handlePay}
-              onReset={resetDemo}
+              onReset={reset}
               onReviewAnother={reviewAnother}
               onTrySafe={trySafeScenario}
             />
@@ -796,21 +796,21 @@ export default function HomePage() {
             <div>
               <p className="section-kicker">Scope and honesty</p>
               <h2>
-                What this demo proves.
+                What ScamBrake proves.
                 <br />
                 <em>And what it does not.</em>
               </h2>
             </div>
             <p className="section-lede">
-              ScamBrake is a warning and a safer next step, not a fraud authority. The demo uses
-              fictional fixtures and PayPal Sandbox only.
+              ScamBrake is a warning and a safer next step, not a fraud authority. The saved
+              profile uses fictional fixtures, and payments stay in PayPal Sandbox.
             </p>
           </div>
           <div className="safety-grid">
             <article className="safety-card">
               <span className="safety-card-label">It does</span>
               <ul>
-                <li>Compare a claimed sender and destination with a small, user-controlled demo profile.</li>
+                <li>Compare a claimed sender and destination with a small, user-controlled saved profile.</li>
                 <li>Show the exact transcript quotes behind every pressure cue.</li>
                 <li>Block or hold before any PayPal order exists.</li>
                 <li>Complete a real Orders v2 Sandbox create → approve → capture flow for the safe sample.</li>
@@ -845,7 +845,7 @@ export default function HomePage() {
           </div>
           <div className="footer-meta">
             <span>PayPal AI Hackathon · Sandbox only</span>
-            <span>MIT-licensed demo</span>
+            <span>MIT-licensed</span>
             <span>Fictional people, banks, and merchants</span>
           </div>
         </div>

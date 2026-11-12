@@ -1,17 +1,17 @@
 import type {
-  DemoMerchant,
-  DemoProfile,
+  Merchant,
+  Profile,
   Extraction,
   Scenario,
 } from "@scambrake/contracts";
 
 /**
- * Fictional demo fixtures. These are the only "trusted contact" records
- * ScamBrake compares against, and the UI labels them as demo data.
+ * Fictional saved-profile fixtures. These are the only "trusted contact"
+ * records ScamBrake compares against, and the UI labels them as fictional.
  */
 
-export const DEMO_PROFILE: DemoProfile = {
-  id: "demo-riya-sharma",
+export const SCAMBRAKE_PROFILE: Profile = {
+  id: "profile-riya-sharma",
   displayName: "Riya Sharma",
   currency: "USD",
   limits: {
@@ -47,11 +47,11 @@ export const DEMO_PROFILE: DemoProfile = {
     {
       id: "kettle-co",
       name: "Kettle & Co.",
-      aliases: ["Kettle and Co.", "Kettle & Co. Demo Store"],
+      aliases: ["Kettle and Co.", "Kettle & Co. Store"],
       identifier: "billing@kettleandco.example",
       type: "merchant",
       maxWithoutConfirmation: 50,
-      note: "Fictional demo merchant. Its PayPal Sandbox seller account receives the successful demo purchase.",
+      note: "Fictional merchant. Its PayPal Sandbox seller account receives the successful Sandbox purchase.",
     },
     {
       id: "maya-chen",
@@ -60,20 +60,20 @@ export const DEMO_PROFILE: DemoProfile = {
       identifier: "maya.chen@example.test",
       type: "person",
       maxWithoutConfirmation: 75,
-      note: "Fictional demo contact.",
+      note: "Fictional saved contact.",
     },
   ],
   fixtureNotice:
-    "Demo fixture: a fictional profile, two fictional recipients, and user-set rules. Not a bank, PayPal, or universal directory.",
+    "Fictional saved profile: two fictional recipients and user-set rules. Not a bank, PayPal, or universal directory.",
 };
 
-export const DEMO_MERCHANT: DemoMerchant = {
+export const SANDBOX_MERCHANT: Merchant = {
   name: "Kettle & Co.",
   identifier: "billing@kettleandco.example",
   amount: 18,
   currency: "USD",
   sandboxNote:
-    "This PayPal Sandbox checkout pays the ScamBrake demo merchant, not the suspicious caller. Sandbox money is not real money.",
+    "This PayPal Sandbox checkout pays the ScamBrake Sandbox merchant, not the suspicious caller. Sandbox money is not real money.",
 };
 
 export const URGENT_SUPPORT_TRANSCRIPT =
@@ -82,7 +82,7 @@ export const URGENT_SUPPORT_TRANSCRIPT =
 export const SAFE_PURCHASE_TRANSCRIPT =
   "Hi, this is Kettle and Co. billing with a quick note about your monthly coffee subscription. Your renewal is $18.00 for the November roast. This is the same saved payment method and the same amount as last month. No action is needed beyond approving the renewal whenever you're ready. Thanks, and have a good week.";
 
-export const DEMO_SCENARIOS: Scenario[] = [
+export const SCENARIOS: Scenario[] = [
   {
     id: "urgent-support-call",
     title: "The urgent support call",
@@ -105,7 +105,7 @@ export const DEMO_SCENARIOS: Scenario[] = [
   {
     id: "trusted-purchase",
     title: "The saved merchant purchase",
-    subtitle: "An $18 renewal from a merchant already in the demo profile.",
+    subtitle: "An $18 renewal from a merchant already in the saved profile.",
     kind: "safe",
     transcript: SAFE_PURCHASE_TRANSCRIPT,
     audioUrl: "/audio/trusted-purchase.m4a",
@@ -119,11 +119,11 @@ export const DEMO_SCENARIOS: Scenario[] = [
     },
     expectedDecision: "ALLOW",
     expectedSummary: "Saved recipient, saved amount, and no pressure language.",
-    fixtureNotice: "Fictional merchant and voice clip. The PayPal Sandbox seller is the demo merchant.",
+    fixtureNotice: "Fictional merchant and voice clip. The PayPal Sandbox seller is the configured merchant.",
   },
 ];
 
-/** High-confidence extraction used by the explicitly labelled demo engine. */
+/** High-confidence extraction used by the explicitly labelled offline engine. */
 export const MOCK_SCENARIO_EXTRACTIONS: Record<string, Extraction> = {
   "urgent-support-call": {
     transcript: URGENT_SUPPORT_TRANSCRIPT,
@@ -186,6 +186,6 @@ export const MOCK_SCENARIO_EXTRACTIONS: Record<string, Extraction> = {
     missingFields: [],
     confidence: 0.96,
     summary:
-      "A routine $18.00 subscription renewal from Kettle & Co., matching the saved demo merchant, saved amount, and usual payment method. No urgency or secrecy language.",
+      "A routine $18.00 subscription renewal from Kettle & Co., matching the saved merchant, saved amount, and usual payment method. No urgency or secrecy language.",
   },
 };

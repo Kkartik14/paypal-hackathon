@@ -1,21 +1,21 @@
-# ScamBrake demo script
+# ScamBrake walkthrough script
 
 **Target runtime:** 2 minutes 20 seconds (hard limit: 3 minutes)
 **Format:** screen recording with voice-over
-**Environment:** local app or hosted demo (https://scambrake-web-kappa.vercel.app), PayPal **Sandbox**, fictional fixtures only
+**Environment:** local app or hosted app (https://scambrake-web-kappa.vercel.app), PayPal **Sandbox**, fictional fixtures only
 
 ## Before recording
 
-- [ ] `pnpm dev` is running, or the hosted demo is live.
+- [ ] `pnpm dev` is running, or the hosted app is live.
 - [ ] `pnpm eval:check` passes locally, so the build uses the prompt that passed the offline gates.
 - [ ] `GET /api/health` shows the expected `aiProvider` and, for the full story, `paypalConfigured: true`.
 - [ ] A PayPal Sandbox **personal** buyer account is available. Sign out of PayPal before recording.
-- [ ] The browser is on `http://localhost:3000` or https://scambrake-web-kappa.vercel.app in a fresh session (or press **Reset demo**).
+- [ ] The browser is on `http://localhost:3000` or https://scambrake-web-kappa.vercel.app in a fresh session (or press **Reset**).
 - [ ] Browser zoom is 110%, bookmarks/extension bars are hidden, and no `.env`, terminal secrets, or personal tabs are visible.
 - [ ] Audio is checked with a 5-second test. Record at 1080p or higher.
 - [ ] Do not show real names, emails, credentials, or any live PayPal account.
 
-If Groq is not configured, the demo still works with the labelled **demo analysis engine**. Say so if it appears; do not imply live audio understanding. If PayPal is not configured, checkout is unavailable by design — use a configured Sandbox for the recorded success path.
+If Groq is not configured, the walkthrough still works with the labelled **offline analysis engine**. Say so if it appears; do not imply live audio understanding. If PayPal is not configured, checkout is unavailable by design — use a configured Sandbox for the recorded success path.
 
 ## 0:00–0:15 — The problem
 
@@ -51,7 +51,7 @@ If Groq is not configured, the demo still works with the labelled **demo analysi
 **Show:** Click **Try the trusted $18 purchase**. The saved merchant scenario loads. Click **Review request**.
 
 **Say:**
-> “Now the other path. This is an $18 coffee subscription renewal from Kettle and Co., a merchant already saved in the demo profile, at the usual amount. The saved recipient, per-recipient limit, and no-pressure checks all pass.”
+> “Now the other path. This is an $18 coffee subscription renewal from Kettle and Co., a merchant already saved in the profile, at the usual amount. The saved recipient, per-recipient limit, and no-pressure checks all pass.”
 
 **Show:** The **ALLOW** result, the saved-profile match, and the green rule checks.
 
@@ -59,7 +59,7 @@ If Groq is not configured, the demo still works with the labelled **demo analysi
 
 **Show:**
 
-1. Scroll to **PayPal Sandbox checkout**, pointing at the fixed demo merchant and **$18.00 USD**.
+1. Scroll to **PayPal Sandbox checkout**, pointing at the fixed Sandbox merchant and **$18.00 USD**.
 2. Click the yellow **PayPal Pay $18.00** button.
 3. Log in with the Sandbox buyer and approve the order.
 4. Land on `/checkout/return`. Point at **APPROVED** and the message that nothing has been captured yet.
@@ -69,11 +69,11 @@ If Groq is not configured, the demo still works with the labelled **demo analysi
 **Say:**
 > “Only an ALLOW decision creates a short-lived signed ticket. The server fixes the merchant, amount, and currency — the browser cannot change them. PayPal approves the buyer, then ScamBrake re-reads the live order and checks the amount, currency, analysis ID, and Sandbox payee before the final capture.”
 
-> “This is a real Orders v2 Sandbox transaction, but Sandbox money is not real money. The demo merchant is fictional; the suspicious caller never receives anything.”
+> “This is a real Orders v2 Sandbox transaction, but Sandbox money is not real money. The Sandbox merchant is fictional; the suspicious caller never receives anything.”
 
 ## 2:05–2:20 — The boundary
 
-**Show:** Scroll to **What this demo proves. And what it does not.** Then the MCP line at the bottom.
+**Show:** Scroll to **What ScamBrake proves. And what it does not.** Then the MCP line at the bottom.
 
 **Say:**
 > “The model reads the conversation. A deterministic policy controls the money. No voice authentication, no deepfake detection, no universal payee check — just a clear boundary before checkout. The read-only MCP endpoint exposes analysis and status, and no capture tool at all.”
@@ -93,7 +93,7 @@ If PayPal Sandbox is unavailable during recording:
 2. On the checkout panel, show the amber “sandbox checkout is not configured” notice (or the API's `503` message) and say: “Checkout is unavailable without server-side Sandbox credentials; analysis and policy still work. The repository includes the full create → approve → capture path.”
 3. Do not fake a receipt. A missing capture is better than a fabricated one.
 
-If Groq is unavailable, use the demo engine and explicitly disclose it on camera. Do not claim live audio analysis when the demo engine is running.
+If Groq is unavailable, use the offline engine and explicitly disclose it on camera. Do not claim live audio analysis when the offline engine is running.
 
 If you mention the evaluation, say only what it is: an offline regression harness over 12 authored synthetic cases that scores extraction plus the real policy, with a hard gate against false `ALLOW`. It is not a benchmark of real-world scam detection.
 
@@ -102,7 +102,7 @@ If you mention the evaluation, say only what it is: an offline regression harnes
 Use:
 
 - “server-side policy decides”
-- “fictional demo profile”
+- “fictional saved profile”
 - “PayPal Sandbox”
 - “saved recipient and saved limits”
 - “the model extracts evidence”

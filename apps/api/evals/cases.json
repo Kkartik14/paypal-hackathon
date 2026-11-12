@@ -61,7 +61,7 @@
       "confidence": 0.94,
       "summary": "A caller claiming to be Meridian Bank account security pressures the user to move $900 to a new protection account today, using texted details instead of the number on the card and asking for secrecy."
     },
-    "notes": "The demo scenario. A support/security claim and a safe-account redirect trigger the never-pay-support rule. The expected recipient is the phrase spoken in the call; “Safe Account Protection” exists only in the submitted form and must not be copied into the extraction."
+    "notes": "The support-call scenario. A support/security claim and a safe-account redirect trigger the never-pay-support rule. The expected recipient is the phrase spoken in the call; “Safe Account Protection” exists only in the submitted form and must not be copied into the extraction."
   },
   {
     "id": "scam-saved-merchant-impersonation",
@@ -401,9 +401,9 @@
       "pressureSignals": [],
       "missingFields": [],
       "confidence": 0.96,
-      "summary": "A routine $18.00 subscription renewal from Kettle & Co., matching the saved demo merchant, saved amount, and usual payment method. No urgency or secrecy language."
+      "summary": "A routine $18.00 subscription renewal from Kettle & Co., matching the saved merchant, saved amount, and usual payment method. No urgency or secrecy language."
     },
-    "notes": "The demo safe purchase. The hardened prompt must ignore routine billing language."
+    "notes": "The safe purchase scenario. The hardened prompt must ignore routine billing language."
   },
   {
     "id": "legit-maya",

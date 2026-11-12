@@ -213,7 +213,7 @@ function ReturnClient() {
               <div>
                 <dt>Merchant</dt>
                 <dd>
-                  {order.merchantName} <small>demo merchant</small>
+                  {order.merchantName} <small>Sandbox merchant</small>
                 </dd>
               </div>
               <div>
@@ -249,7 +249,7 @@ function ReturnClient() {
             <div className="receipt-proof">
               <ShieldCheck width={17} height={17} />
               <p>
-                The backend re-read the order from PayPal and matched the amount, currency, demo
+                The backend re-read the order from PayPal and matched the amount, currency, Sandbox
                 merchant, and analysis ID before capture. The browser redirect alone was never
                 treated as proof of payment.
               </p>
@@ -335,7 +335,7 @@ function ReturnClient() {
 
             <div className="approve-summary">
               <div>
-                <span className="mini-label">Demo merchant</span>
+                <span className="mini-label">Sandbox merchant</span>
                 <strong>{order.merchantName}</strong>
                 <small>
                   {order.paypalPayee
@@ -446,8 +446,8 @@ function ReturnClient() {
         )}
 
         <p className="return-disclaimer">
-          Demo checkout pays the ScamBrake sandbox merchant, not the suspicious caller. Fictional
-          profile and merchant. PayPal remains the source of truth for order status.
+          The Sandbox checkout pays the ScamBrake Sandbox merchant, not the suspicious caller. The
+          profile and merchant are fictional. PayPal remains the source of truth for order status.
         </p>
       </div>
     </ReturnShell>
@@ -467,7 +467,7 @@ function ReturnShell({ children }: { children: React.ReactNode }) {
       </header>
       <main className="return-main">{children}</main>
       <footer className="return-footer">
-        <span>ScamBrake · PayPal AI Hackathon demo</span>
+        <span>ScamBrake · PayPal AI Hackathon</span>
         <span>Fictional fixtures · no real money</span>
       </footer>
     </div>

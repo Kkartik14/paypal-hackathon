@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Extraction, PaymentRequest } from "@scambrake/contracts";
 import { ContactsService } from "../contacts/contacts.service";
-import { DEMO_PROFILE, MOCK_SCENARIO_EXTRACTIONS } from "../demo/demo-data";
+import { SCAMBRAKE_PROFILE, MOCK_SCENARIO_EXTRACTIONS } from "../fixtures/profile-data";
 import { PolicyService } from "./policy.service";
 
 function buildPolicy(): PolicyService {
@@ -29,7 +29,7 @@ describe("PolicyService", () => {
         recipientName: "Safe Account Protection",
         recipientIdentifier: "secure-payments@protection-review.example",
       },
-      profile: DEMO_PROFILE,
+      profile: SCAMBRAKE_PROFILE,
     });
 
     expect(outcome.decision).toBe("BLOCK");
@@ -45,7 +45,7 @@ describe("PolicyService", () => {
     const outcome = buildPolicy().evaluate({
       extraction: safeExtraction,
       payment: safePayment,
-      profile: DEMO_PROFILE,
+      profile: SCAMBRAKE_PROFILE,
     });
 
     expect(outcome.decision).toBe("ALLOW");
@@ -68,7 +68,7 @@ describe("PolicyService", () => {
         recipientName: "Totally New Store",
         recipientIdentifier: "pay@new-store.example",
       },
-      profile: DEMO_PROFILE,
+      profile: SCAMBRAKE_PROFILE,
     });
 
     expect(outcome.decision).toBe("HOLD");
@@ -82,7 +82,7 @@ describe("PolicyService", () => {
     const outcome = buildPolicy().evaluate({
       extraction: { ...safeExtraction, amount: 80 },
       payment: { ...safePayment, amount: 80 },
-      profile: DEMO_PROFILE,
+      profile: SCAMBRAKE_PROFILE,
     });
 
     expect(outcome.decision).toBe("HOLD");
@@ -96,7 +96,7 @@ describe("PolicyService", () => {
     const outcome = buildPolicy().evaluate({
       extraction: { ...safeExtraction, amount: 150 },
       payment: { ...safePayment, amount: 150 },
-      profile: DEMO_PROFILE,
+      profile: SCAMBRAKE_PROFILE,
     });
 
     expect(outcome.decision).toBe("HOLD");
@@ -107,7 +107,7 @@ describe("PolicyService", () => {
     const outcome = buildPolicy().evaluate({
       extraction: safeExtraction,
       payment: { ...safePayment, amount: 19 },
-      profile: DEMO_PROFILE,
+      profile: SCAMBRAKE_PROFILE,
     });
 
     expect(outcome.decision).toBe("HOLD");
@@ -124,7 +124,7 @@ describe("PolicyService", () => {
         missingFields: ["amount"],
       },
       payment: safePayment,
-      profile: DEMO_PROFILE,
+      profile: SCAMBRAKE_PROFILE,
     });
 
     expect(outcome.decision).toBe("HOLD");
@@ -142,7 +142,7 @@ describe("PolicyService", () => {
         amount: 18,
       },
       payment: safePayment,
-      profile: DEMO_PROFILE,
+      profile: SCAMBRAKE_PROFILE,
     });
 
     expect(outcome.decision).toBe("BLOCK");

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
-import type { CreateOrderResponse, DemoProfile, OrderView } from "@scambrake/contracts";
+import type { CreateOrderResponse, Profile, OrderView } from "@scambrake/contracts";
 import { ApiException } from "../common/api.exception";
 import { AppConfig } from "../config/app.config";
 import { ContactsService } from "../contacts/contacts.service";
@@ -22,30 +22,30 @@ export class PaymentsService {
   async createOrder(ticket: string): Promise<CreateOrderResponse> {
     const payload = this.verifyTicketForCheckout(ticket);
     const merchant = this.contacts.getMerchant();
-    const profile: DemoProfile = this.contacts.getProfile();
+    const profile: Profile = this.contacts.getProfile();
 
     if (payload.profileId !== profile.id) {
-      throw new ApiException(403, "TICKET_PROFILE_MISMATCH", "This decision belongs to a different demo profile.");
+      throw new ApiException(403, "TICKET_PROFILE_MISMATCH", "This decision belongs to a different saved profile.");
     }
-    if (!this.contacts.isDemoMerchant(payload.recipientName, payload.recipientIdentifier)) {
+    if (!this.contacts.isMerchant(payload.recipientName, payload.recipientIdentifier)) {
       throw new ApiException(
         409,
-        "DEMO_MERCHANT_ONLY",
-        `This demo can only check out the saved Sandbox merchant, ${merchant.name}. No PayPal order was created.`,
+        "SANDBOX_MERCHANT_ONLY",
+        `This checkout can only pay the saved Sandbox merchant, ${merchant.name}. No PayPal order was created.`,
       );
     }
     if (Math.abs(payload.amount - merchant.amount) > 0.005) {
       throw new ApiException(
         409,
-        "DEMO_AMOUNT_FIXED",
-        `The demo checkout is fixed at $${merchant.amount.toFixed(2)} USD. No PayPal order was created.`,
+        "SANDBOX_AMOUNT_FIXED",
+        `The Sandbox checkout is fixed at $${merchant.amount.toFixed(2)} USD. No PayPal order was created.`,
       );
     }
 
     const order = await this.paypal.createOrder({
       amount: merchant.amount,
       currency: "USD",
-      description: "ScamBrake demo purchase (Sandbox)",
+      description: "ScamBrake Sandbox purchase",
       customId: payload.analysisId,
       returnUrl: `${this.config.webOrigin}/checkout/return`,
       cancelUrl: `${this.config.webOrigin}/?checkout=cancelled`,
@@ -158,7 +158,7 @@ export class PaymentsService {
       throw new ApiException(
         409,
         "PAYPAL_PAYEE_MISMATCH",
-        "PayPal reports a different Sandbox seller than the configured demo payee. No capture was attempted.",
+        "PayPal reports a different Sandbox seller than the configured Sandbox payee. No capture was attempted.",
       );
     }
   }

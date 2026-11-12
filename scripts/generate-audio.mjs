@@ -3,8 +3,8 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
 /**
- * Generates the two fictional demo clips with macOS text-to-speech.
- * The resulting m4a files are committed so the demo does not depend on TTS.
+ * Generates the two fictional sample clips with macOS text-to-speech.
+ * The resulting m4a files are committed so the app does not depend on TTS.
  * Transcripts are in fixtures/audio/*.txt and embedded in the API fixtures.
  */
 const clips = [

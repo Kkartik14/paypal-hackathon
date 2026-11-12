@@ -93,7 +93,7 @@ export class PaypalService {
         },
       ],
       application_context: {
-        brand_name: "ScamBrake Demo",
+        brand_name: "ScamBrake",
         user_action: "PAY_NOW",
         shipping_preference: "NO_SHIPPING",
         return_url: input.returnUrl,

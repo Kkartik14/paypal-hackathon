@@ -69,7 +69,7 @@ describe("AppConfig", () => {
     expect(config.paypalApiBase).toBe("https://api-m.sandbox.paypal.com");
   });
 
-  it("defaults to the labelled demo engine without an AI key", () => {
+  it("defaults to the labelled offline engine without an AI key", () => {
     setEnv({ NODE_ENV: "development" });
     const config = new AppConfig();
     expect(config.aiProvider).toBe("mock");
@@ -85,7 +85,7 @@ describe("AppConfig", () => {
     expect(config.aiConfigured).toBe(true);
   });
 
-  it("keeps the demo engine when explicitly selected", () => {
+  it("keeps the offline engine when explicitly selected", () => {
     setEnv({ NODE_ENV: "development", AI_PROVIDER: "mock", GROQ_API_KEY: "gsk_test" });
     const config = new AppConfig();
     expect(config.aiProvider).toBe("mock");

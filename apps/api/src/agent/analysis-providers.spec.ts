@@ -28,7 +28,7 @@ const EXTRACTION = {
   pressureSignals: [],
   missingFields: [],
   confidence: 0.93,
-  summary: "A routine renewal from the saved demo merchant. No pressure cues were found.",
+  summary: "A routine renewal from the saved merchant. No pressure cues were found.",
 };
 
 function jsonResponse(body: unknown, status = 200): Response {
@@ -290,7 +290,7 @@ describe("MockAnalysisProvider", () => {
   it("uses the committed extraction fixture for a known scenario", async () => {
     const contacts = new ContactsService();
     const scenario = contacts.getScenario("trusted-purchase");
-    const fixture = (await import("../demo/demo-data")).MOCK_SCENARIO_EXTRACTIONS["trusted-purchase"];
+    const fixture = (await import("../fixtures/profile-data")).MOCK_SCENARIO_EXTRACTIONS["trusted-purchase"];
     expect(scenario).not.toBeNull();
 
     const result = await new MockAnalysisProvider().analyze({
