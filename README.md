@@ -9,6 +9,7 @@ Built for the PayPal AI Hackathon. Sandbox only — no live credentials and no r
 - [Security boundaries and known limits](docs/SECURITY.md)
 - [Prompt evaluation and release gates](docs/EVALUATION.md)
 - [Under-three-minute walkthrough](docs/WALKTHROUGH.md)
+- [Submission pack](docs/SUBMISSION.md)
 - [Deployment notes](docs/DEPLOYMENT.md)
 
 **Hosted app:** [scambrake-web-kappa.vercel.app](https://scambrake-web-kappa.vercel.app) · [API health](https://scambrake-api.vercel.app/api/health). The hosted build uses the same Sandbox-only API, Groq analysis, and deterministic policy as the local run. No real money can move.
@@ -29,19 +30,19 @@ The differentiating moment is the separation of jobs: the AI gathers and quotes 
 ## Architecture
 
 ```
-┌──────────────────────────┐        REST / JSON        ┌───────────────────────────┐
-│  Next.js web (apps/web)  │ ────────────────────────▶ │  NestJS API (apps/api)    │
-│  review, evidence,       │                           │                           │
-│  checkout return         │                           │  Analysis  ─▶ Groq or     │
-└──────────────────────────┘                           │              offline engine│
-                                                       │  Policy    ─▶ ALLOW/HOLD/ │
-┌──────────────────────────┐        JSON-RPC           │              BLOCK        │
-│  MCP client              │ ────────────────────────▶ │  Payments  ─▶ ticket +    │
-│  (read-only tools)       │                           │              PayPal       │
-└──────────────────────────┘                           └─────────────┬─────────────┘
-                                                                     │ Orders v2
-                                                                     ▼
-                                                       PayPal Sandbox (no live money)
+┌─────────────────────────────┐                          ┌─────────────────────────────┐
+│  Next.js web (apps/web)     │ ───────────────────────▶ │  NestJS API (apps/api)      │
+│  review, evidence,          │                          │                             │
+│  checkout return            │                          │  Analysis  ─▶ Groq or       │
+└─────────────────────────────┘                          │              offline engine │
+                                                         │  Policy    ─▶ ALLOW /       │
+┌─────────────────────────────┐        JSON-RPC          │              HOLD / BLOCK   │
+│  MCP client                 │ ───────────────────────▶ │  Payments  ─▶ ticket +      │
+│  (read-only tools)          │                          │              PayPal         │
+└─────────────────────────────┘                          └─────────────────────────────┘
+                                                                        │ Orders v2
+                                                                        ▼
+                                                        PayPal Sandbox · no live money
 ```
 
 **Checkout gate.** An ALLOW analysis issues a 20-minute HMAC-signed decision ticket bound to the analysis ID, profile, recipient, amount, and currency. Creating an order requires a valid ticket and a server-fixed $18.00 USD Sandbox merchant. Capturing requires buyer approval at PayPal, the same ticket, a fresh order read, and matching order ID, analysis ID, amount, currency, and (when configured) payee. The AI never sees PayPal credentials and has no capture tool.
