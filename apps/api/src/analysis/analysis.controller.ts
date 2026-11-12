@@ -37,7 +37,7 @@ export class ScenariosController {
     private readonly config: AppConfig,
   ) {}
 
-  @Get("scenarios")
+  @Get()
   @Header("Cache-Control", "no-store")
   scenarios() {
     return {
